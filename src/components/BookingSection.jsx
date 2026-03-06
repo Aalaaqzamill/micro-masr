@@ -93,7 +93,7 @@ export function BookingSection() {
               <h3 className="text-[#4A7554] mb-4 text-2xl md:text-3xl font-black">سائق</h3>
               
               <p className="text-gray-600 mb-10 text-lg md:text-xl leading-relaxed max-w-[300px]">
-                سجل خط سيرك وحدد أجرك، ووصل ركاب في طريقك بسهولة.
+                سجل خط سيرك وحدد سعر تزكرتك، ووصل ركاب في طريقك بسهولة.
               </p>
               
               <motion.button 
