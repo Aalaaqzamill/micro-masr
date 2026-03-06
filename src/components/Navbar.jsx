@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Menu, X } from "lucide-react";
 import { useNavigate } from "react-router-dom";
-import { motion } from "framer-motion"; // ضفت فريمر موشن للأنيميشن البسيط
+import { motion } from "framer-motion"; 
 import logo from "../assets/logo11.png";
 
 export function Navbar() {
@@ -9,7 +9,7 @@ export function Navbar() {
   const navigate = useNavigate();
 
   const lightBg = "#f9f7f7ff"; 
-  const creamyHover = "#F2EEE3"; // اللون الكريمي للهوفر
+  const creamyHover = "#F2EEE3"; 
 
   return (
     <nav
