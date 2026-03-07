@@ -114,7 +114,7 @@ export function RegisterPage() {
               {errors.email && <p className="text-red-500 text-xs mt-1 mr-1">{errors.email}</p>}
             </div>
 
-            {/* Phone Field */}
+            {/* Phone Field.. */}
             <div>
               <label className="block text-gray-700 mb-1.5 font-bold text-sm">رقم الموبايل</label>
               <div className="relative">
