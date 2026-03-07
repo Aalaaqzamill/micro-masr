@@ -1,3 +1,4 @@
+// src/App.js
 import { Routes, Route, useLocation } from "react-router-dom"; // أضفنا useLocation
 
 import { Navbar } from "./components/Navbar";
@@ -8,6 +9,7 @@ import { HowItWorksSection } from "./components/HowItWorksSection";
 import { CTASection } from "./components/CTASection";
 import { Footer } from "./components/Footer";
 import AboutSection from "./components/AboutSection";
+import ContactUsPage from "./pages/ContactUsPage";
 
 function Home() {
   return (
@@ -36,7 +38,8 @@ function App() {
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/about" element={<AboutSection />} />
-          {/* أي صفحة تانية هتضيفيها هنا، الفوتر مش هيظهر فيها إلا لو ضفتِ مسارها فوق */}
+          <Route path="/contact" element={<ContactUsPage />} /> {/* صفحة التواصل */}
+          {/* أي صفحة تانية هتضيفيها هنا */}
         </Routes>
       </main>
 

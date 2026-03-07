@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react";
+import { motion } from "framer-motion";
 import hero2 from "../assets/hero2.jpg";
 
-const heroImages = [hero2 ];
+const heroImages = [hero2];
 
 export function HeroSection() {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
@@ -29,12 +30,12 @@ export function HeroSection() {
             opacity: currentImageIndex === index ? 1 : 0,
             backgroundImage: `url(${image})`,
             backgroundSize: "cover",
-            backgroundPosition: "center",
+            backgroundPosition: "center top", // الجزء العلوي يظهر
           }}
         />
       ))}
 
-      {/* Overlay أخف */}
+      {/* Overlay Gradient */}
       <div className="absolute inset-0 bg-gradient-to-l from-[#4A7554]/60 via-[#4A7554]/40 to-transparent" />
 
       {/* Content */}
@@ -50,9 +51,18 @@ export function HeroSection() {
               ومكيف، أو اطلب ميكروباص مخصوص ليك ولعيلتك.
             </p>
 
-            <button className="px-6 py-4 bg-[#E09162] text-white rounded-3xl hover:bg-[#d07f54] transition-all shadow-[0_10px_30px_rgba(224,145,98,0.4)] hover:shadow-[0_15px_40px_rgba(224,145,98,0.5)] hover:scale-105 font-bold text-lg">
+            {/* Animated Button */}
+            <motion.button
+              whileHover={{
+                scale: 1.05,
+                boxShadow: "0 20px 50px rgba(224,145,98,0.7), 0 0 25px rgba(224,145,98,0.5)",
+              }}
+              whileTap={{ scale: 0.95 }}
+              transition={{ duration: 0.3 }}
+              className="px-8 py-4 bg-gradient-to-r from-[#FFB26B] via-[#E09162] to-[#D36B3D] text-white font-extrabold rounded-3xl shadow-[0_10px_30px_rgba(224,145,98,0.6)] text-lg"
+            >
               حمل التطبيق دلوقتي
-            </button>
+            </motion.button>
           </div>
         </div>
       </div>
@@ -63,11 +73,10 @@ export function HeroSection() {
           <button
             key={index}
             onClick={() => setCurrentImageIndex(index)}
-            className={`w-3 h-3 rounded-full transition-all ${
-              currentImageIndex === index
+            className={`w-3 h-3 rounded-full transition-all ${currentImageIndex === index
                 ? "bg-white w-8"
                 : "bg-white/50 hover:bg-white/75"
-            }`}
+              }`}
           />
         ))}
       </div>

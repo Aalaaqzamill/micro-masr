@@ -45,7 +45,7 @@ export function BookingSection() {
             }}
             onClick={() => navigate('/passenger-booking')}
             
-            className="group relative bg-white border-2 border-[#E09162]/20 rounded-[3rem] p-10 md:p-12 shadow-[0_10px_40px_rgba(0,0,0,0.02)] hover:shadow-[0_20px_50px_rgba(224,145,98,0.15)] cursor-pointer transition-all duration-300"
+            className="group relative bg-white border-2 border-[#E09162] rounded-[3rem] p-10 md:p-12 shadow-[0_10px_40px_rgba(0,0,0,0.02)] hover:shadow-[0_20px_50px_rgba(224,145,98,0.15)] cursor-pointer transition-all duration-300"
           >
             <div className="flex flex-col items-center text-center">
               <motion.div 
@@ -63,7 +63,7 @@ export function BookingSection() {
               
               <motion.button 
                 whileTap={{ scale: 0.96 }}
-                className="w-full py-5 bg-[#E09162] text-white rounded-2xl hover:bg-[#d07f54] transition-all shadow-md font-bold text-xl flex items-center justify-center gap-2"
+                className="w-full py-5 bg-[#E09162] text-white rounded-[40px] hover:bg-[#d07f54] transition-all shadow-md font-bold text-xl flex items-center justify-center gap-2"
               >
                 احجز رحلة
               </motion.button>
@@ -80,7 +80,7 @@ export function BookingSection() {
             }}
             onClick={() => navigate('/driver-booking')}
             
-            className="group relative bg-white border-2 border-[#4A7554]/20 rounded-[3rem] p-10 md:p-12 shadow-[0_10px_40px_rgba(0,0,0,0.02)] hover:shadow-[0_20px_50px_rgba(74,117,84,0.15)] cursor-pointer transition-all duration-300"
+            className="group relative bg-white border-2 border-[#4A7554] rounded-[3rem] p-10 md:p-12 shadow-[0_10px_40px_rgba(0,0,0,0.02)] hover:shadow-[0_20px_50px_rgba(74,117,84,0.15)] cursor-pointer transition-all duration-300"
           >
             <div className="flex flex-col items-center text-center">
               <motion.div 
@@ -90,7 +90,7 @@ export function BookingSection() {
                 <Car className="text-white" size={42} />
               </motion.div>
               
-              <h3 className="text-[#4A7554] mb-4 text-2xl md:text-3xl font-black">سائق</h3>
+              <h3 className="text-[#E09162] mb-4 text-2xl md:text-3xl font-black">سائق</h3>
               
               <p className="text-gray-600 mb-10 text-lg md:text-xl leading-relaxed max-w-[300px]">
                 سجل خط سيرك وحدد سعر تزكرتك، ووصل ركاب في طريقك بسهولة.
@@ -98,7 +98,7 @@ export function BookingSection() {
               
               <motion.button 
                 whileTap={{ scale: 0.96 }}
-                className="w-full py-5 bg-[#4A7554] text-white rounded-2xl hover:bg-[#3d6145] transition-all shadow-md font-bold text-xl flex items-center justify-center gap-2"
+                className="w-full py-5 bg-[#4A7554] text-white rounded-[40px] hover:bg-[#3d6145] transition-all shadow-md font-bold text-xl flex items-center justify-center gap-2"
               >
                 ابدأ كسائق
               </motion.button>
