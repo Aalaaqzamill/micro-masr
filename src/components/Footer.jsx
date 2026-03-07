@@ -71,13 +71,17 @@ export function Footer() {
                   عن Micro Masr
                 </Link>
               </li>
-              {['الأسئلة الشائعة', 'تواصل معنا'].map((link) => (
-                <li key={link}>
-                  <a href="#" className="hover:text-white hover:mr-2 transition-all duration-300 inline-block">
-                    {link}
-                  </a>
-                </li>
-              ))}
+              <li>
+                <a href="#" className="hover:text-white hover:mr-2 transition-all duration-300 inline-block">
+                  الأسئلة الشائعة
+                </a>
+              </li>
+              <li>
+                {/* تم تعديل هذا الرابط ليعمل مع React Router */}
+                <Link to="/contact" className="hover:text-white hover:mr-2 transition-all duration-300 inline-block">
+                  تواصل معنا
+                </Link>
+              </li>
             </ul>
           </motion.div>
 
@@ -95,9 +99,9 @@ export function Footer() {
             </ul>
           </motion.div>
 
-          {/* 4. تواصل معنا */}
+          {/* 4. تواصل معنا (بيانات الاتصال) */}
           <motion.div variants={itemVariants}>
-            <h4 className="text-xl font-bold mb-6">تواصل معنا</h4>
+            <h4 className="text-xl font-bold mb-6">بيانات الاتصال</h4>
             <ul className="space-y-6">
               {[
                 { Icon: MapPin, text: "القاهرة، مصر" },
@@ -129,7 +133,7 @@ export function Footer() {
           className="border-t border-white/10 pt-10 mt-16 flex flex-col md:flex-row justify-between items-center gap-6"
         >
           <p className="text-white/40 text-base font-medium">
-            © 2025 Micro Masr. جميع الحقوق محفوظة.
+            © 2026 Micro Masr. جميع الحقوق محفوظة.
           </p>
           <div className="flex gap-8 text-base text-white/40">
             {['سياسة الخصوصية', 'الشروط والأحكام'].map((legal) => (
