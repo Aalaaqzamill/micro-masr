@@ -114,7 +114,6 @@ export function HowItWorksSection() {
               transition={{ duration: 0.4 }}
               className="bg-[#F2EEE3] p-2 rounded-3xl flex flex-col items-center text-center justify-center hover:shadow-xl hover:bg-[#ebe6d8] transition-all duration-0 border border-transparent aspect-square relative"
             >
-              {/* Number */}
               <div className="absolute -top-3 -left-3 w-10 h-10 bg-[#E09162] rounded-full flex items-center justify-center text-white font-bold text-lg z-20">
                 {steps[current].number}
               </div>
@@ -136,15 +135,12 @@ export function HowItWorksSection() {
               </p>
             </motion.div>
           </AnimatePresence>
-
-          {/* Indicators */}
           <div className="flex justify-center mt-6 gap-2">
             {steps.map((_, index) => (
               <div
                 key={index}
-                className={`h-2 rounded-full transition-all ${
-                  current === index ? "w-6 bg-[#4A7554]" : "w-2 bg-gray-300"
-                }`}
+                className={`h-2 rounded-full transition-all ${current === index ? "w-6 bg-[#4A7554]" : "w-2 bg-gray-300"
+                  }`}
               />
             ))}
           </div>

@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import logo from "../assets/logo11.png";
-
 export function SplashScreen({ onComplete }) {
   const [fadeOut, setFadeOut] = useState(false);
 
@@ -17,11 +16,9 @@ export function SplashScreen({ onComplete }) {
 
   return (
     <div
-      className={`fixed inset-0 z-[100] bg-[#4A7554] flex flex-col items-center justify-center transition-opacity duration-500 ${
-        fadeOut ? "opacity-0" : "opacity-100"
-      }`}
+      className={`fixed inset-0 z-[100] bg-[#4A7554] flex flex-col items-center justify-center transition-opacity duration-500 ${fadeOut ? "opacity-0" : "opacity-100"
+        }`}
     >
-      {/* Logo */}
       <div className="mb-6 animate-pulse">
         <img
           src={logo}
@@ -29,11 +26,7 @@ export function SplashScreen({ onComplete }) {
           className="w-32 h-32 rounded-3xl object-contain"
         />
       </div>
-
-      {/* Brand Name */}
       <h1 className="text-white text-4xl font-bold">MicroMasr</h1>
-
-      {/* Loading Animation */}
       <div className="mt-8 flex gap-2">
         <div className="w-2 h-2 bg-white rounded-full animate-bounce"></div>
         <div

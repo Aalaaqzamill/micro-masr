@@ -4,9 +4,7 @@ import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
 
 export function Footer() {
-  const mediumGreenBg = "#406348"; 
-
-  // الأنيميشن الخاص بظهور العناصر 
+  const mediumGreenBg = "#406348";
   const containerVariants = {
     hidden: { opacity: 0 },
     visible: {
@@ -27,7 +25,7 @@ export function Footer() {
       dir="rtl"
     >
       <div className="max-w-7xl mx-auto px-6 sm:px-8 lg:px-12">
-        
+
         <motion.div
           variants={containerVariants}
           initial="hidden"
@@ -35,13 +33,12 @@ export function Footer() {
           viewport={{ once: true }}
           className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-12"
         >
-          {/* 1. نص الشركة */}
           <motion.div variants={itemVariants} className="lg:pr-4">
             <h3 className="text-2xl font-bold mb-6">Micro Masr</h3>
             <p className="text-white/85 leading-loose text-lg mb-8 max-w-sm">
               منصتك الأولى الموثوقة لحجز الميكروباص في مصر. بنوصلك لأي مكان بأمان وراحة.
             </p>
-            
+
             <div className="flex gap-4">
               {[Instagram, Twitter, Facebook].map((Icon, index) => (
                 <motion.a
@@ -56,8 +53,6 @@ export function Footer() {
               ))}
             </div>
           </motion.div>
-
-          {/* 2. روابط سريعة */}
           <motion.div variants={itemVariants}>
             <h4 className="text-xl font-bold mb-6">روابط سريعة</h4>
             <ul className="space-y-4 text-white/70 font-medium">
@@ -77,15 +72,12 @@ export function Footer() {
                 </a>
               </li>
               <li>
-                {/* تم تعديل هذا الرابط ليعمل مع React Router */}
                 <Link to="/contact" className="hover:text-white hover:mr-2 transition-all duration-300 inline-block">
                   تواصل معنا
                 </Link>
               </li>
             </ul>
           </motion.div>
-
-          {/* 3. خدماتنا */}
           <motion.div variants={itemVariants}>
             <h4 className="text-xl font-bold mb-6">خدماتنا</h4>
             <ul className="space-y-4 text-white/70 font-medium">
@@ -108,8 +100,8 @@ export function Footer() {
                 { Icon: Phone, text: "+20 123 456 7890", dir: "ltr" },
                 { Icon: Mail, text: "info@micromasr.com" }
               ].map((item, index) => (
-                <motion.li 
-                  key={index} 
+                <motion.li
+                  key={index}
                   whileHover={{ x: -5 }}
                   className="flex items-center gap-4 text-white/80 group cursor-default"
                 >
@@ -126,7 +118,7 @@ export function Footer() {
         </motion.div>
 
         {/* الخط السفلي وحقوق الملكية */}
-        <motion.div 
+        <motion.div
           initial={{ opacity: 0 }}
           whileInView={{ opacity: 1 }}
           transition={{ delay: 0.5 }}

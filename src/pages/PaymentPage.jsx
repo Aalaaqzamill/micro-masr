@@ -7,11 +7,8 @@ export function PaymentPage() {
   const navigate = useNavigate();
   const location = useLocation();
   const tripDetails = location.state;
-
   const [phoneNumber, setPhoneNumber] = useState('');
   const [isProcessing, setIsProcessing] = useState(false);
-
-  // If no trip details, redirect back
   if (!tripDetails) {
     return (
       <div className="min-h-screen bg-[#F2EEE3] flex items-center justify-center">
@@ -25,20 +22,17 @@ export function PaymentPage() {
     );
   }
 
-  const serviceFee = tripDetails.price * 0.05; // 5% service fee
+  const serviceFee = tripDetails.price * 0.05;
   const total = tripDetails.price + serviceFee;
-
   const handlePayment = (e) => {
     e.preventDefault();
-    
+
     if (!phoneNumber || phoneNumber.length < 11) {
       toast.error('من فضلك أدخل رقم هاتف صحيح');
       return;
     }
 
     setIsProcessing(true);
-
-    // Simulate payment processing
     setTimeout(() => {
       setIsProcessing(false);
       toast.success('تم الدفع بنجاح! ستصلك رسالة تأكيد قريباً');
@@ -66,16 +60,13 @@ export function PaymentPage() {
       instructions: 'سيتم تحويل المبلغ من حسابك البنكي'
     };
   };
-
   const paymentMethod = getPaymentMethodInfo();
-
   return (
     <div className="min-h-screen bg-[#F2EEE3]" dir="rtl">
-      {/* Header */}
       <div className="bg-white shadow-sm sticky top-0 z-10">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
-          <Link 
-            to="/passenger-booking" 
+          <Link
+            to="/passenger-booking"
             className="inline-flex items-center gap-2 text-[#4A7554] hover:text-[#5F8A61] transition-colors font-medium"
           >
             <ArrowRight size={20} className="ml-1" />
@@ -83,10 +74,7 @@ export function PaymentPage() {
           </Link>
         </div>
       </div>
-
-      {/* Main Content */}
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
-        {/* Title Section */}
         <div className="text-center mb-10">
           <div className="w-20 h-20 bg-[#4A7554] rounded-2xl flex items-center justify-center mb-6 mx-auto shadow-lg">
             <Shield className="text-white" size={36} />
@@ -94,9 +82,7 @@ export function PaymentPage() {
           <h1 className="text-[#4A7554] text-3xl font-bold mb-3">تأكيد الدفع</h1>
           <p className="text-gray-600 text-lg">راجع تفاصيل رحلتك وأكمل عملية الدفع</p>
         </div>
-
         <div className="grid grid-cols-1 lg:grid-cols-5 gap-8">
-          {/* Payment Form - Left Side */}
           <div className="lg:col-span-3">
             <div className="bg-white rounded-[2rem] shadow-lg p-8 border border-[#E5DBC8]/50">
               <h2 className="text-xl font-bold text-gray-800 mb-6 flex items-center gap-2">
@@ -105,9 +91,7 @@ export function PaymentPage() {
                 </div>
                 {paymentMethod.name}
               </h2>
-
               <form onSubmit={handlePayment} className="space-y-6">
-                {/* Phone Number */}
                 <div>
                   <label htmlFor="phone" className="block text-gray-700 mb-2 font-bold text-sm">
                     رقم الهاتف
@@ -126,8 +110,6 @@ export function PaymentPage() {
                   </div>
                   <p className="text-sm text-gray-500 mt-2">{paymentMethod.instructions}</p>
                 </div>
-
-                {/* Security Notice */}
                 <div className="bg-[#F2EEE3] p-4 rounded-xl flex items-start gap-3">
                   <Shield className="text-[#4A7554] flex-shrink-0 mt-1" size={20} />
                   <div className="text-sm text-gray-700">
@@ -135,8 +117,6 @@ export function PaymentPage() {
                     <p className="text-xs">جميع بياناتك محمية ومشفرة. لن نشارك معلوماتك مع أي طرف ثالث.</p>
                   </div>
                 </div>
-
-                {/* Submit Button */}
                 <button
                   type="submit"
                   disabled={isProcessing}
@@ -157,14 +137,10 @@ export function PaymentPage() {
               </form>
             </div>
           </div>
-
-          {/* Trip Summary - Right Side */}
           <div className="lg:col-span-2">
             <div className="bg-white rounded-[2rem] shadow-lg p-6 border border-[#E5DBC8]/50 sticky top-24">
               <h3 className="text-lg font-bold text-gray-800 mb-6">ملخص الرحلة</h3>
-
               <div className="space-y-4 mb-6">
-                {/* Route */}
                 <div className="flex items-center gap-4 pb-4 border-b border-gray-100">
                   <div className="text-lg font-bold text-gray-800">{tripDetails.from}</div>
                   <div className="flex-1 h-0.5 bg-gray-200 relative">
@@ -174,8 +150,6 @@ export function PaymentPage() {
                   </div>
                   <div className="text-lg font-bold text-gray-800">{tripDetails.to}</div>
                 </div>
-
-                {/* Date */}
                 <div className="flex items-center justify-between text-sm">
                   <div className="flex items-center gap-2 text-gray-500">
                     <Calendar size={16} />
@@ -183,8 +157,6 @@ export function PaymentPage() {
                   </div>
                   <span className="font-medium text-gray-800">{tripDetails.date}</span>
                 </div>
-
-                {/* Passengers */}
                 <div className="flex items-center justify-between text-sm">
                   <div className="flex items-center gap-2 text-gray-500">
                     <Users size={16} />
@@ -193,8 +165,6 @@ export function PaymentPage() {
                   <span className="font-medium text-gray-800">{tripDetails.passengers} فرد</span>
                 </div>
               </div>
-
-              {/* Price Breakdown */}
               <div className="space-y-3 pt-4 border-t border-gray-200">
                 <div className="flex items-center justify-between text-sm">
                   <span className="text-gray-600">سعر الرحلة</span>

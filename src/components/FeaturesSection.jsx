@@ -43,7 +43,7 @@ export function FeaturesSection() {
   useEffect(() => {
     const interval = setInterval(() => {
       setCurrent((prev) => (prev + 1) % features.length);
-    }, 3500); // كل 3.5 ثانية
+    }, 3500);
     return () => clearInterval(interval);
   }, []);
 
@@ -53,8 +53,6 @@ export function FeaturesSection() {
   return (
     <section className="py-24 bg-[#F2EEE3]" dir="rtl">
       <div className="max-w-7xl mx-auto px-6 sm:px-8 lg:px-12">
-
-        {/* Title */}
         <div className="text-center mb-16">
           <h2 className="text-[#3a5a41] mb-5 text-3xl md:text-4xl font-extrabold">
             ليه تختار Micro Masr؟
@@ -63,8 +61,6 @@ export function FeaturesSection() {
             بنقدملك تجربة سفر مريحة وآمنة بأحدث الميكروباصات وأفضل السائقين في مصر.
           </p>
         </div>
-
-        {/* Desktop Grid with enhanced animation */}
         <div className="hidden md:grid grid-cols-2 lg:grid-cols-3 gap-10">
           {features.map((feature, index) => {
             const Icon = feature.icon;
@@ -103,8 +99,6 @@ export function FeaturesSection() {
             );
           })}
         </div>
-
-        {/* Mobile Carousel */}
         <div className="md:hidden relative max-w-md mx-auto">
           <AnimatePresence mode="wait">
             <motion.div
@@ -128,20 +122,16 @@ export function FeaturesSection() {
               <p className="text-gray-500">{features[current].description}</p>
             </motion.div>
           </AnimatePresence>
-
-          {/* Indicators */}
           <div className="flex justify-center mt-6 gap-2">
             {features.map((_, index) => (
               <div
                 key={index}
-                className={`h-2 rounded-full transition-all ${
-                  current === index ? "w-6 bg-[#9BBF4E]" : "w-2 bg-gray-300"
-                }`}
+                className={`h-2 rounded-full transition-all ${current === index ? "w-6 bg-[#9BBF4E]" : "w-2 bg-gray-300"
+                  }`}
               />
             ))}
           </div>
         </div>
-
       </div>
     </section>
   );

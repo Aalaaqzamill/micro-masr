@@ -6,6 +6,6 @@ body {
   font-family: 'Playpen Sans Arabic', sans-serif;
   
   html, body {
-  overflow-x: hidden; /* يمنع ظهور أي scroll أفقي */
+  overflow-x: hidden; 
 }
 }

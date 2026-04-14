@@ -1,4 +1,4 @@
-// src/App.js
+
 
 import { useState } from "react";
 import { Routes, Route, useLocation } from "react-router-dom";
@@ -35,16 +35,15 @@ function App() {
   const [loading, setLoading] = useState(true);
   const location = useLocation();
 
-  // إظهار Splash Screen أول ما الموقع يفتح
+
   if (loading) {
     return <SplashScreen onComplete={() => setLoading(false)} />;
   }
 
-  // تحديد هل يظهر الناف بار؟ (يظهر في الرئيسية، عن الشركة، والتواصل)
   const showNavbarPaths = ["/", "/about", "/contact"];
   const shouldShowNavbar = showNavbarPaths.includes(location.pathname);
 
-  // الصفحات اللي يظهر فيها الفوتر
+
   const showFooterPaths = ["/", "/about"];
   const shouldShowFooter = showFooterPaths.includes(location.pathname);
 
