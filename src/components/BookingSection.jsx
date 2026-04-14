@@ -43,7 +43,7 @@ export function BookingSection() {
               borderColor: "#E09162", 
               transition: { duration: 0.3 } 
             }}
-            onClick={() => navigate('/passenger-booking')}
+            onClick={() => navigate('/book-passenger')}
             
             className="group relative bg-white border-2 border-[#E09162] rounded-[3rem] p-10 md:p-12 shadow-[0_10px_40px_rgba(0,0,0,0.02)] hover:shadow-[0_20px_50px_rgba(224,145,98,0.15)] cursor-pointer transition-all duration-300"
           >
