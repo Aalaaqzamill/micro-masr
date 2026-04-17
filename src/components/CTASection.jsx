@@ -96,7 +96,7 @@ export function CTASection() {
       </div>
 
       {/* Curved bottom border */}
-      <div className="absolute bottom-0 left-0 right-0 h-24 bg-[#F2EEE3]" 
+      <div className="absolute bottom-0 left-0 right-0 h-24 bg-[#FFFFFF]" 
            style={{ clipPath: 'ellipse(75% 100% at 50% 100%)' }} />
     </section>
   );
