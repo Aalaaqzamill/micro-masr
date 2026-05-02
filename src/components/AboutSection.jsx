@@ -3,7 +3,7 @@ import { Target, Eye, Award } from "lucide-react";
 import { motion } from "framer-motion";
 
 export default function AboutSection() {
-  const brandLime = "#9BBF4E"; 
+  const brandLime = "#9BBF4E";
 
   const valuesData = [
     {
@@ -26,10 +26,9 @@ export default function AboutSection() {
   return (
     <section id="about" className="py-20 md:py-24 bg-[#E5DBC8]" dir="rtl">
       <div className="max-w-7xl mx-auto px-5 sm:px-8 lg:px-12">
-        
-        {/* سكشن المحتوى العلوي */}
+
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-center mb-16 lg:mb-20">
-          
+
           <motion.div
             className="text-center lg:text-right"
             initial={{ opacity: 0, x: 50 }}
@@ -41,7 +40,6 @@ export default function AboutSection() {
               عن Micro Masr
             </h2>
 
-            {/* نصوص السكشن بلون أسود باهت وبدون Bold */}
             <p className="text-gray-600 mb-6 text-lg sm:text-xl leading-relaxed font-normal">
               Micro Masr هي المنصة الأولى الرائدة لحجز الميكروباص في مصر. احنا بنوصل السواقين بالركاب في كل المحافظات، وهدفنا هو توفير وسيلة مواصلات آمنة، موفرة، ومريحة لكل الناس.
             </p>
@@ -54,8 +52,8 @@ export default function AboutSection() {
               احنا بنجمع بين التكنولوجيا الحديثة وكرم الضيافة المصري عشان نقدم تجربة سفر مميزة لكل مستخدمينا.
             </p>
           </motion.div>
-
-          <motion.div 
+          
+          <motion.div
             className="relative flex justify-center"
             initial={{ opacity: 0, scale: 0.9 }}
             whileInView={{ opacity: 1, scale: 1 }}
@@ -70,7 +68,7 @@ export default function AboutSection() {
               />
             </div>
 
-            <motion.div 
+            <motion.div
               className="absolute -bottom-6 sm:-bottom-8 -left-2 sm:-left-8 bg-[#9BBF4E] text-white p-4 sm:p-7 rounded-2xl shadow-xl flex flex-col items-center"
               initial={{ rotate: -15, scale: 0.5 }}
               whileInView={{ rotate: 0, scale: 1 }}
@@ -82,7 +80,7 @@ export default function AboutSection() {
           </motion.div>
         </div>
 
-        {/* سكشن الكروت */}
+        {/* كروت القيم - تم تعديلها هنا */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 md:gap-10">
           {valuesData.map((item, index) => {
             const Icon = item.icon;
@@ -93,27 +91,21 @@ export default function AboutSection() {
                 whileInView={{ opacity: 1, y: 0, scale: 1 }}
                 viewport={{ once: true }}
                 transition={{
-                  duration: 0.6,
-                  delay: index * 0.15,
-                  type: "spring",
-                  stiffness: 100,
-                  damping: 15,
+                  duration: 0.5,
+                  delay: index * 0.1,
                 }}
+                // أنميشن الهوفر السريع
                 whileHover={{
-                  scale: 1.08,
-                  y: -5,
-                  boxShadow: "0px 20px 30px rgba(0,0,0,0.2)",
-                  transition: { type: "spring", stiffness: 200, damping: 20 },
+                  scale: 1.05,
+                  y: -8,
+                  boxShadow: "0px 15px 30px rgba(0,0,0,0.1)",
                 }}
-                whileTap={{ scale: 0.95 }}
-                className="bg-white p-8 sm:p-10 rounded-[2.5rem] text-center cursor-pointer flex flex-col items-center group shadow-sm"
+                whileTap={{ scale: 0.98 }}
+                // تعديل الماوس إلى سهم عادي
+                className="bg-white p-8 sm:p-10 rounded-[2.5rem] text-center cursor-default flex flex-col items-center group shadow-sm transition-colors duration-200"
               >
-
-                <motion.div 
-                  initial={{ rotate: -10 }}
-                  whileInView={{ rotate: 0 }}
-                  transition={{ duration: 0.5, type: "spring", stiffness: 120 }}
-                  className="w-16 h-16 rounded-2xl flex items-center justify-center mb-6"
+                <motion.div
+                  className="w-16 h-16 rounded-2xl flex items-center justify-center mb-6 transition-transform group-hover:rotate-6"
                   style={{ backgroundColor: brandLime }}
                 >
                   <Icon className="text-white" size={30} />
@@ -122,12 +114,9 @@ export default function AboutSection() {
                 <h3 className="text-[#3a5a41] mb-3 text-xl sm:text-2xl font-bold tracking-tight">
                   {item.title}
                 </h3>
-
-                {/* نصوص الكروت أيضاً لون أسود باهت وبدون Bold */}
                 <p className="text-gray-600 leading-relaxed text-base sm:text-lg font-normal">
                   {item.description}
                 </p>
-
               </motion.div>
             );
           })}

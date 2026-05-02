@@ -1,3 +1,6 @@
+
+
+import { useState } from "react";
 import { Routes, Route, useLocation } from "react-router-dom";
 import { Navbar } from "./components/Navbar";
 import { Footer } from "./components/Footer";
@@ -6,11 +9,15 @@ import { BookingSection } from "./components/BookingSection";
 import { FeaturesSection } from "./components/FeaturesSection";
 import { HowItWorksSection } from "./components/HowItWorksSection";
 import { CTASection } from "./components/CTASection";
+import { SplashScreen } from "./components/SplashScreen";
 import AboutSection from "./components/AboutSection";
 import ContactUsPage from "./pages/ContactUsPage";
-import { LoginPage } from "./pages/LoginPage"; // الربط الصحيح ✅
+import { LoginPage } from "./pages/LoginPage"; 
 import ScrollToTop from "./components/ScrollToTop";
 import { RegisterPage } from "./pages/RegisterPage";
+import { PassengerBookingPage } from "./pages/PassengerBookPage";
+import { PaymentPage } from "./pages/PaymentPage";
+import { DriverBookingPage } from './pages/DriverBookingPage';
 
 function Home() {
   return (
@@ -25,13 +32,19 @@ function Home() {
 }
 
 function App() {
+
+  const [loading, setLoading] = useState(true);
   const location = useLocation();
 
-  // 1. تحديد هل يظهر الناف بار؟ (يظهر في الرئيسية، عن الشركة، والتواصل)
+
+  if (loading) {
+    return <SplashScreen onComplete={() => setLoading(false)} />;
+  }
+
   const showNavbarPaths = ["/", "/about", "/contact"];
   const shouldShowNavbar = showNavbarPaths.includes(location.pathname);
 
-  // 2. تحديد هل يظهر الفوتر؟ (يظهر في الكل ما عدا التواصل والصفحات الخارجية)
+
   const showFooterPaths = ["/", "/about"];
   const shouldShowFooter = showFooterPaths.includes(location.pathname);
 
@@ -39,7 +52,6 @@ function App() {
     <div className="flex flex-col min-h-screen font-sans">
       <ScrollToTop /> 
       
-      {/* هيظهر في التواصل عادي */}
       {shouldShowNavbar && <Navbar />}
 
       <main className="flex-grow">
@@ -49,10 +61,11 @@ function App() {
           <Route path="/contact" element={<ContactUsPage />} />
           <Route path="/login" element={<LoginPage />} />
           <Route path="/register" element={<RegisterPage />} />
+           <Route path="/book-passenger" element={<PassengerBookingPage />} />
+          <Route path="/payment" element={<PaymentPage />} />
         </Routes>
       </main>
 
-      {/* مش هيظهر في صفحة التواصل خالص */}
       {shouldShowFooter && <Footer />}
     </div>
   );

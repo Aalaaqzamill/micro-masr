@@ -39,11 +39,10 @@ export function FeaturesSection() {
   const brandGreen = "#9BBF4E";
   const [current, setCurrent] = useState(0);
 
-  // Auto slide for mobile carousel
   useEffect(() => {
     const interval = setInterval(() => {
       setCurrent((prev) => (prev + 1) % features.length);
-    }, 3500); // كل 3.5 ثانية
+    }, 3500);
     return () => clearInterval(interval);
   }, []);
 
@@ -53,8 +52,6 @@ export function FeaturesSection() {
   return (
     <section className="py-24 bg-[#F2EEE3]" dir="rtl">
       <div className="max-w-7xl mx-auto px-6 sm:px-8 lg:px-12">
-
-        {/* Title */}
         <div className="text-center mb-16">
           <h2 className="text-[#3a5a41] mb-5 text-3xl md:text-4xl font-extrabold">
             ليه تختار Micro Masr؟
@@ -64,36 +61,31 @@ export function FeaturesSection() {
           </p>
         </div>
 
-        {/* Desktop Grid with enhanced animation */}
+        
         <div className="hidden md:grid grid-cols-2 lg:grid-cols-3 gap-10">
           {features.map((feature, index) => {
             const Icon = feature.icon;
             return (
               <motion.div
                 key={index}
-                initial={{ opacity: 0, y: 50, scale: 0.8 }}
-                animate={{ opacity: 1, y: 0, scale: 1 }}
+                initial={{ opacity: 0, y: 30, scale: 0.9 }} // تقليل المسافة والحجم لتسريع الشعور بالظهور
+                whileInView={{ opacity: 1, y: 0, scale: 1 }}
+                viewport={{ once: true }}
                 transition={{
-                  duration: 0.6,
-                  delay: index * 0.15,
-                  type: "spring",
-                  stiffness: 100,
-                  damping: 15,
+                  duration: 0.4, // تسريع مدة الظهور (كانت 0.6)
+                  delay: index * 0.08, // تقليل التأخير بين الكروت (كان 0.15)
+                  ease: "easeOut"
                 }}
                 whileHover={{
-                  scale: 1.08,
-                  y: -5,
-                  boxShadow: "0px 20px 30px rgba(0,0,0,0.2)",
-                  transition: { type: "spring", stiffness: 200, damping: 20 },
+                  scale: 1.05,
+                  y: -8,
+                  boxShadow: "0px 15px 30px rgba(0,0,0,0.1)",
                 }}
-                whileTap={{ scale: 0.95 }}
-                className="bg-white p-10 rounded-[2.5rem] cursor-pointer"
+                whileTap={{ scale: 0.98 }}
+                className="bg-white p-10 rounded-[2.5rem] cursor-default group" /* أضفنا group لعمل أنميشن للأيقونة */
               >
                 <motion.div
-                  initial={{ rotate: -10 }}
-                  animate={{ rotate: 0 }}
-                  transition={{ duration: 0.5, type: "spring", stiffness: 120 }}
-                  className="w-16 h-16 bg-[#9BBF4E] rounded-2xl flex items-center justify-center mb-6"
+                  className="w-16 h-16 bg-[#9BBF4E] rounded-2xl flex items-center justify-center mb-6 transition-transform group-hover:rotate-6 duration-200"
                 >
                   <Icon className="text-white" size={30} />
                 </motion.div>
@@ -104,7 +96,7 @@ export function FeaturesSection() {
           })}
         </div>
 
-        {/* Mobile Carousel */}
+        
         <div className="md:hidden relative max-w-md mx-auto">
           <AnimatePresence mode="wait">
             <motion.div
@@ -115,11 +107,11 @@ export function FeaturesSection() {
                 if (info.offset.x < -100) next();
                 if (info.offset.x > 100) prev();
               }}
-              initial={{ opacity: 0, x: 80 }}
+              initial={{ opacity: 0, x: 50 }} // تقليل مسافة الإزاحة (كانت 80)
               animate={{ opacity: 1, x: 0 }}
-              exit={{ opacity: 0, x: -80 }}
-              transition={{ duration: 0.25 }}
-              className="bg-white p-8 rounded-[2.5rem] flex flex-col items-center text-center justify-center shadow-xl cursor-grab"
+              exit={{ opacity: 0, x: -50 }}
+              transition={{ duration: 0.2 }} // تسريع التنقل بين الصور (كان 0.25)
+              className="bg-white p-8 rounded-[2.5rem] flex flex-col items-center text-center justify-center shadow-xl cursor-default"
             >
               <div className="w-16 h-16 bg-[#9BBF4E] rounded-2xl flex items-center justify-center mb-6">
                 {React.createElement(features[current].icon, { className: "text-white", size: 30 })}
@@ -128,20 +120,15 @@ export function FeaturesSection() {
               <p className="text-gray-500">{features[current].description}</p>
             </motion.div>
           </AnimatePresence>
-
-          {/* Indicators */}
           <div className="flex justify-center mt-6 gap-2">
             {features.map((_, index) => (
               <div
                 key={index}
-                className={`h-2 rounded-full transition-all ${
-                  current === index ? "w-6 bg-[#9BBF4E]" : "w-2 bg-gray-300"
-                }`}
+                className={`h-2 rounded-full transition-all duration-200 ${current === index ? "w-6 bg-[#9BBF4E]" : "w-2 bg-gray-300"}`}
               />
             ))}
           </div>
         </div>
-
       </div>
     </section>
   );

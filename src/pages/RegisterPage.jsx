@@ -15,19 +15,18 @@ export function RegisterPage() {
 
   const [errors, setErrors] = useState({});
 
-  // دالة التحقق من صحة البيانات
   const validateForm = () => {
     let newErrors = {};
-    
+
     if (formData.fullname.length < 3) newErrors.fullname = 'الاسم يجب أن يكون 3 حروف على الأقل';
-    
+
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(formData.email)) newErrors.email = 'البريد الإلكتروني غير صحيح';
-    
+
     if (!/^01[0125]\d{8}$/.test(formData.phone)) newErrors.phone = 'رقم الموبايل غير صحيح (مثال: 010xxxxxxxx)';
-    
+
     if (formData.password.length < 6) newErrors.password = 'كلمة المرور يجب أن تكون 6 رموز على الأقل';
-    
+
     if (formData.password !== formData.confirmPassword) {
       newErrors.confirmPassword = 'كلمات المرور غير متطابقة';
     }
@@ -42,7 +41,6 @@ export function RegisterPage() {
     e.preventDefault();
     if (validateForm()) {
       toast.success('تم إنشاء الحساب بنجاح! جاري التحويل...');
-      // هنا تضع كود إرسال البيانات للسيرفر
     } else {
       toast.error('يرجى تصحيح الأخطاء في النموذج');
     }
@@ -54,32 +52,25 @@ export function RegisterPage() {
       ...prev,
       [id]: type === 'checkbox' ? checked : value
     }));
-    // مسح الخطأ فور البدء في الكتابة
     if (errors[id]) setErrors(prev => ({ ...prev, [id]: null }));
   };
 
   return (
     <div className="min-h-screen bg-[#F2EEE3] flex items-center justify-center px-4 py-12" dir="rtl">
       <div className="max-w-md w-full">
-        {/* Back to Home */}
-        <Link 
-          to="/" 
+        <Link
+          to="/"
           className="inline-flex items-center gap-2 text-[#4A7554] hover:text-[#5F8A61] mb-8 transition-colors font-medium"
         >
           <ArrowRight size={20} className="ml-1" />
           رجوع للرئيسية
         </Link>
-
-        {/* Registration Card */}
         <div className="bg-white rounded-3xl shadow-[0_8px_30px_rgba(74,117,84,0.15)] p-8 md:p-10 border border-[#E5DBC8]/50">
           <div className="text-center mb-8">
             <h1 className="text-[#4A7554] text-3xl font-bold mb-3">حساب جديد</h1>
             <p className="text-gray-600">انضم لعائلة Micro Masr في ثواني</p>
           </div>
-
           <form className="space-y-5" onSubmit={handleSubmit}>
-            
-            {/* Full Name */}
             <div>
               <label className="block text-gray-700 mb-1.5 font-bold text-sm">الاسم بالكامل</label>
               <div className="relative">
@@ -95,8 +86,6 @@ export function RegisterPage() {
               </div>
               {errors.fullname && <p className="text-red-500 text-xs mt-1 mr-1">{errors.fullname}</p>}
             </div>
-
-            {/* Email Field */}
             <div>
               <label className="block text-gray-700 mb-1.5 font-bold text-sm">البريد الإلكتروني</label>
               <div className="relative">
@@ -113,8 +102,6 @@ export function RegisterPage() {
               </div>
               {errors.email && <p className="text-red-500 text-xs mt-1 mr-1">{errors.email}</p>}
             </div>
-
-            {/* Phone Field.. */}
             <div>
               <label className="block text-gray-700 mb-1.5 font-bold text-sm">رقم الموبايل</label>
               <div className="relative">
@@ -131,8 +118,6 @@ export function RegisterPage() {
               </div>
               {errors.phone && <p className="text-red-500 text-xs mt-1 mr-1">{errors.phone}</p>}
             </div>
-
-            {/* Password */}
             <div>
               <label className="block text-gray-700 mb-1.5 font-bold text-sm">كلمة المرور</label>
               <div className="relative">
@@ -148,8 +133,6 @@ export function RegisterPage() {
               </div>
               {errors.password && <p className="text-red-500 text-xs mt-1 mr-1">{errors.password}</p>}
             </div>
-
-            {/* Confirm Password */}
             <div>
               <label className="block text-gray-700 mb-1.5 font-bold text-sm">تأكيد كلمة المرور</label>
               <div className="relative">
@@ -165,12 +148,10 @@ export function RegisterPage() {
               </div>
               {errors.confirmPassword && <p className="text-red-500 text-xs mt-1 mr-1">{errors.confirmPassword}</p>}
             </div>
-
-            {/* Terms Checkbox */}
             <div className="py-2">
               <label className="flex items-start gap-3 cursor-pointer group">
-                <input 
-                  type="checkbox" 
+                <input
+                  type="checkbox"
                   id="agreeTerms"
                   checked={formData.agreeTerms}
                   onChange={handleChange}
@@ -185,8 +166,6 @@ export function RegisterPage() {
               </label>
               {errors.agreeTerms && <p className="text-red-500 text-xs mt-1">{errors.agreeTerms}</p>}
             </div>
-
-            {/* Submit Button */}
             <button
               type="submit"
               className="w-full px-8 py-4 bg-[#4A7554] text-white rounded-xl hover:bg-[#5F8A61] active:scale-[0.98] transition-all shadow-md hover:shadow-lg font-bold text-lg mt-2"
@@ -194,8 +173,6 @@ export function RegisterPage() {
               إنشاء الحساب
             </button>
           </form>
-
-          {/* Divider */}
           <div className="relative my-8">
             <div className="absolute inset-0 flex items-center">
               <div className="w-full border-t border-[#E5DBC8]"></div>
@@ -204,8 +181,6 @@ export function RegisterPage() {
               <span className="px-4 bg-white text-gray-500 text-sm">أو</span>
             </div>
           </div>
-
-          {/* Log In Link */}
           <div className="text-center">
             <p className="text-gray-600">
               عندك حساب بالفعل؟{' '}

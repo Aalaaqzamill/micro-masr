@@ -7,9 +7,7 @@ import logo from "../assets/logo11.png";
 export function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
   const navigate = useNavigate();
-
   const creamyHover = "#F2EEE3";
-
   return (
     <nav
       className="fixed top-3 left-1/2 -translate-x-1/2 z-50 w-[92%] max-w-6xl rounded-[90px] backdrop-blur-lg border border-white/20 shadow-lg"
@@ -18,7 +16,6 @@ export function Navbar() {
     >
       <div className="px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
-          {/* Logo */}
           <div
             className="flex items-center gap-1 cursor-pointer"
             onClick={() => navigate("/")}
@@ -32,11 +29,9 @@ export function Navbar() {
               className="text-[#4A7554] font-extrabold text-xl tracking-tight"
               style={{ fontFamily: "'Playwrite NZ Basic', serif" }}
             >
-              Micro Masr
+              ميكرو مصر 
             </h1>
           </div>
-
-          {/* Menu Button */}
           <div className="flex items-center">
             <button
               onClick={() => setIsOpen(!isOpen)}
@@ -49,13 +44,9 @@ export function Navbar() {
             </button>
           </div>
         </div>
-
-        {/* Dropdown Menu */}
         {isOpen && (
           <div className="absolute top-full left-0 w-full mt-3 bg-white backdrop-blur-xl rounded-[40px] shadow-xl border border-black/5">
             <div className="flex flex-col space-y-1 p-6">
-              
-              {/* Links to pages */}
               <button
                 onClick={() => {
                   navigate("/");
@@ -65,7 +56,6 @@ export function Navbar() {
               >
                 الرئيسية
               </button>
-
               <button
                 onClick={() => {
                   navigate("/about");
@@ -75,7 +65,6 @@ export function Navbar() {
               >
                 من نحن
               </button>
-
               <button
                 onClick={() => {
                   navigate("/services");
@@ -85,7 +74,6 @@ export function Navbar() {
               >
                 خدماتنا
               </button>
-
               <button
                 onClick={() => {
                   navigate("/contact");
@@ -95,8 +83,6 @@ export function Navbar() {
               >
                 تواصل معنا
               </button>
-
-              {/* Auth Buttons */}
               <div className="pt-4 flex flex-col sm:flex-row gap-3">
                 <motion.button
                   whileHover={{ scale: 1.02 }}
@@ -107,7 +93,6 @@ export function Navbar() {
                 >
                   إنشاء حساب
                 </motion.button>
-
                 <motion.button
                   whileHover={{ scale: 1.02, backgroundColor: creamyHover }}
                   whileTap={{ scale: 0.98 }}
