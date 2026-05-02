@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { Routes, Route, useLocation } from "react-router-dom";
 import { Navbar } from "./components/Navbar";
@@ -16,6 +17,7 @@ import { RegisterPage } from "./pages/RegisterPage";
 import { PassengerBookingPage } from "./pages/PassengerBookPage";
 import { PaymentPage } from "./pages/PaymentPage";
 import { DriverBookingPage } from './pages/DriverBookingPage';
+import { PaymentResultPage } from './pages/PaymentResultPage';
 
 function Home() {
   return (
@@ -29,9 +31,8 @@ function Home() {
   );
 }
 
-// ... (كل الـ imports اللي فوق زي ما هي)
-
 function App() {
+
   const [loading, setLoading] = useState(true);
   const location = useLocation();
 
@@ -39,22 +40,10 @@ function App() {
     return <SplashScreen onComplete={() => setLoading(false)} />;
   }
 
-  // شلنا "/driver-booking" من هنا عشان الـ Navbar يختفي
-  const showNavbarPaths = [
-    "/", 
-    "/about", 
-    "/contact"
-  ];
+  const showNavbarPaths = ["/", "/about", "/contact"];
   const shouldShowNavbar = showNavbarPaths.includes(location.pathname);
-
-  // لو عايزة الـ Footer يختفي هو كمان من صفحة السواق شيليه من هنا
-  const showFooterPaths = [
-    "/", 
-    "/about", 
-    "/contact"
-  ];
+  const showFooterPaths = ["/", "/about"];
   const shouldShowFooter = showFooterPaths.includes(location.pathname);
-
   return (
     <div className="flex flex-col min-h-screen font-sans">
       <ScrollToTop /> 
@@ -68,15 +57,10 @@ function App() {
           <Route path="/contact" element={<ContactUsPage />} />
           <Route path="/login" element={<LoginPage />} />
           <Route path="/register" element={<RegisterPage />} />
-          <Route path="/book-passenger" element={<PassengerBookingPage />} />
+           <Route path="/book-passenger" element={<PassengerBookingPage />} />
           <Route path="/payment" element={<PaymentPage />} />
-          <Route path="/driver-booking" element={<DriverBookingPage />} />
-          
-          <Route path="*" element={
-            <div className="pt-32 text-center h-screen">
-              <h2 className="text-2xl font-bold">404 - الصفحة غير موجودة</h2>
-            </div>
-          } />
+          <Route path="/driver-booking" element={<DriverBookingPage/>}/>
+         <Route path="/payment-result" element={<PaymentResultPage />} />
         </Routes>
       </main>
 

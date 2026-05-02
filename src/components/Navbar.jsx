@@ -65,15 +65,7 @@ export function Navbar() {
               >
                 من نحن
               </button>
-              <button
-                onClick={() => {
-                  navigate("/services");
-                  setIsOpen(false);
-                }}
-                className="text-right px-6 py-4 hover:bg-[#4A7554]/5 rounded-xl font-bold text-[#4A7554]"
-              >
-                خدماتنا
-              </button>
+
               <button
                 onClick={() => {
                   navigate("/contact");
