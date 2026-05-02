@@ -38,19 +38,16 @@ export function HowItWorksSection() {
 
   const next = () => setCurrent((prev) => (prev + 1) % steps.length);
   const prev = () => setCurrent((prev) => (prev - 1 + steps.length) % steps.length);
-
   // Auto slide
   useEffect(() => {
     const interval = setInterval(() => {
       next();
-    }, 3500); // كل 3.5 ثانية
+    }, 3500); 
     return () => clearInterval(interval);
   }, []);
-
   return (
     <section className="py-24 bg-white overflow-hidden" dir="rtl">
       <div className="max-w-7xl mx-auto px-6 sm:px-8 lg:px-12">
-        {/* Title */}
         <div className="text-center mb-16 md:mb-20">
           <h2 className="text-[#3a5a41] mb-5 text-3xl md:text-4xl font-extrabold tracking-tight">
             ازاي تحجز رحلتك؟
@@ -62,8 +59,6 @@ export function HowItWorksSection() {
             خطوات بسيطة تفصلك عن رحلتك الجاية مع Micro Masr
           </p>
         </div>
-
-        {/* Desktop Grid */}
         <div className="hidden lg:grid grid-cols-4 gap-6">
           {steps.map((step, index) => {
             const Icon = step.icon;
@@ -72,7 +67,6 @@ export function HowItWorksSection() {
                 key={index}
                 className="bg-[#F2EEE3] p-8 rounded-3xl flex flex-col items-center text-center justify-center hover:shadow-xl hover:bg-[#ebe6d8] transition-all duration-300 border border-transparent aspect-square relative"
               >
-                {/* Number */}
                 <div className="absolute -top-3 -left-3 w-10 h-10 bg-[#E09162] rounded-full flex items-center justify-center text-white font-bold text-lg z-20">
                   {step.number}
                 </div>
@@ -96,8 +90,6 @@ export function HowItWorksSection() {
             );
           })}
         </div>
-
-        {/* Mobile Carousel */}
         <div className="lg:hidden relative max-w-md mx-auto">
           <AnimatePresence mode="wait">
             <motion.div
@@ -117,7 +109,6 @@ export function HowItWorksSection() {
               <div className="absolute -top-3 -left-3 w-10 h-10 bg-[#E09162] rounded-full flex items-center justify-center text-white font-bold text-lg z-20">
                 {steps[current].number}
               </div>
-
               <div
                 className="w-16 h-16 rounded-2xl flex items-center justify-center mb-6 shadow-sm"
                 style={{ backgroundColor: brandGreen }}

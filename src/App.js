@@ -1,5 +1,4 @@
 
-
 import { useState } from "react";
 import { Routes, Route, useLocation } from "react-router-dom";
 import { Navbar } from "./components/Navbar";
@@ -36,18 +35,14 @@ function App() {
   const [loading, setLoading] = useState(true);
   const location = useLocation();
 
-
   if (loading) {
     return <SplashScreen onComplete={() => setLoading(false)} />;
   }
 
   const showNavbarPaths = ["/", "/about", "/contact"];
   const shouldShowNavbar = showNavbarPaths.includes(location.pathname);
-
-
   const showFooterPaths = ["/", "/about"];
   const shouldShowFooter = showFooterPaths.includes(location.pathname);
-
   return (
     <div className="flex flex-col min-h-screen font-sans">
       <ScrollToTop /> 

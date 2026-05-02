@@ -48,7 +48,6 @@ export function FeaturesSection() {
 
   const next = () => setCurrent((prev) => (prev + 1) % features.length);
   const prev = () => setCurrent((prev) => (prev - 1 + features.length) % features.length);
-
   return (
     <section className="py-24 bg-[#F2EEE3]" dir="rtl">
       <div className="max-w-7xl mx-auto px-6 sm:px-8 lg:px-12">
