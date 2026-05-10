@@ -1,48 +1,68 @@
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
-import hero2 from "../assets/hero2.jpg";
-import ScrollIndicator from "./ScrollIndicator"; 
+import heroo from "../assets/heroo.jpg";
+import hero22 from "../assets/hero22.jpg";
+import ScrollIndicator from "./ScrollIndicator";
 
-const heroImages = [hero2];
+const heroImages = [heroo, hero22];
 
 export function HeroSection() {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
 
+  // السلايدر يلف تلقائي باستمرار
   useEffect(() => {
     const interval = setInterval(() => {
-      setCurrentImageIndex((prevIndex) => (prevIndex + 1) % heroImages.length);
-    }, 5000);
+      setCurrentImageIndex(
+        (prevIndex) => (prevIndex + 1) % heroImages.length
+      );
+    }, 3000);
+
     return () => clearInterval(interval);
-  }, []);
+  }, [currentImageIndex]);
 
   return (
-    <section id="home" className="relative h-[70vh] md:h-screen overflow-hidden pt-20" dir="rtl">
+    <section
+      id="home"
+      className="relative h-[70vh] md:h-screen overflow-hidden pt-20"
+      dir="rtl"
+    >
+      {/* الصور */}
       {heroImages.map((image, index) => (
         <div
           key={index}
           className="absolute inset-0 transition-opacity duration-1000"
           style={{
             opacity: currentImageIndex === index ? 1 : 0,
+            zIndex: currentImageIndex === index ? 1 : 0,
             backgroundImage: `url(${image})`,
             backgroundSize: "cover",
             backgroundPosition: "center top",
+            backgroundRepeat: "no-repeat",
           }}
         />
       ))}
 
-      <div className="absolute inset-0 bg-gradient-to-l from-[#4A7554]/60 via-[#4A7554]/40 to-transparent" />
+      {/* Overlay */}
+      <div className="absolute inset-0 bg-gradient-to-l from-[#4A7554]/60 via-[#4A7554]/40 to-transparent z-10" />
 
-      <div className="relative z-10 h-full flex items-center">
+      {/* المحتوى */}
+      <div className="relative z-20 h-full flex items-center">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
           <div className="max-w-2xl mr-0 ml-auto text-right">
             <h2 className="text-white text-4xl sm:text-5xl lg:text-6xl mb-6 font-bold leading-tight">
-             اختيارك الأول للتنقل السريع في مصر
+              اختيارك الأول للتنقل السريع في مصر
             </h2>
+
             <p className="text-white/95 text-lg sm:text-xl mb-8 max-w-xl mr-0 ml-auto">
-              سافر لأي مكان في مصر بأمان وراحة. احجز مقعدك في ميكروباص حديث ومكيف، أو اطلب ميكروباص مخصوص ليك ولعيلتك.
+              سافر لأي مكان في مصر بأمان وراحة. احجز مقعدك في ميكروباص حديث
+              ومكيف، أو اطلب ميكروباص مخصوص ليك ولعيلتك.
             </p>
+
             <motion.button
-              whileHover={{ scale: 1.05, boxShadow: "0 20px 50px rgba(224,145,98,0.7)" }}
+              whileHover={{
+                scale: 1.05,
+                boxShadow: "0 20px 50px rgba(224,145,98,0.7)",
+              }}
               whileTap={{ scale: 0.95 }}
               className="px-8 py-4 bg-gradient-to-r from-[#FFB26B] via-[#E09162] to-[#D36B3D] text-white font-extrabold rounded-3xl shadow-lg text-lg"
             >
@@ -52,17 +72,22 @@ export function HeroSection() {
         </div>
       </div>
 
-      
+      {/* Scroll Indicator */}
       <div className="absolute bottom-20 left-0 right-0 z-30 flex justify-center">
         <ScrollIndicator targetId="booking-selection" />
       </div>
 
-      <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 z-20 flex space-x-2 flex-row-reverse">
+      {/* الدوتس */}
+      <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 z-30 flex space-x-2 flex-row-reverse">
         {heroImages.map((_, index) => (
           <button
             key={index}
             onClick={() => setCurrentImageIndex(index)}
-            className={`w-3 h-3 rounded-full transition-all ${currentImageIndex === index ? "bg-white w-8" : "bg-white/50"}`}
+            className={`h-3 rounded-full transition-all duration-300 ${
+              currentImageIndex === index
+                ? "bg-white w-8"
+                : "bg-white/50 w-3"
+            }`}
           />
         ))}
       </div>

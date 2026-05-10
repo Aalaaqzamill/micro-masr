@@ -2,7 +2,6 @@ import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { ArrowRight, MapPin, Calendar, Users, Smartphone, CreditCard, CheckCircle, Shield } from 'lucide-react';
 import { useState } from 'react';
 import { toast } from 'sonner';
-
 export function PaymentPage() {
   const navigate = useNavigate();
   const location = useLocation();
@@ -28,8 +27,6 @@ export function PaymentPage() {
 
   const handlePayment = (e) => {
     e.preventDefault();
-
-    // ✅ الشرط الصحيح: لازم 11 رقم بالظبط
     if (!phoneNumber || phoneNumber.length !== 11) {
       navigate('/payment-result', {
         state: {
@@ -168,25 +165,21 @@ export function PaymentPage() {
                   </div>
                   <div className="text-lg font-bold text-gray-800">{tripDetails.to}</div>
                 </div>
-
                 <div className="flex items-center justify-between text-sm">
                   <span>التاريخ</span>
                   <span>{tripDetails.date}</span>
                 </div>
-
                 <div className="flex items-center justify-between text-sm">
                   <span>عدد الأفراد</span>
                   <span>{tripDetails.passengers}</span>
                 </div>
               </div>
-
               <div className="pt-4 border-t border-gray-200">
                 <div className="flex justify-between">
                   <span>الإجمالي</span>
                   <span className="font-bold text-[#4A7554]">{total.toFixed(2)} ج.م</span>
                 </div>
               </div>
-
             </div>
           </div>
         </div>
