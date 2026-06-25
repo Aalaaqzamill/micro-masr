@@ -2,12 +2,15 @@ import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
-import { Lock, ArrowLeft, Mail, Smartphone } from 'lucide-react';
+import { Lock, ArrowLeft, Mail, User, Car } from 'lucide-react';
 import { motion } from 'framer-motion';
+import { useAuth } from '../../context/AuthContext';
 
 export function LoginPage() {
   const navigate = useNavigate();
+  const { login } = useAuth();
   const [formLoading, setFormLoading] = useState(false);
+  const [accountType, setAccountType] = useState('passenger');
 
   const formik = useFormik({
     initialValues: {
@@ -25,15 +28,23 @@ export function LoginPage() {
     onSubmit: (values) => {
       setFormLoading(true);
       setTimeout(() => {
-        console.log("بيانات الدخول:", values);
+        const userData = {
+          email: values.email,
+          accountType: accountType,
+          fullname: 'مستخدم'
+        };
+        
+        login(userData);
+
         setFormLoading(false);
         navigate('/');
       }, 1500);
     },
   });
+
   return (
-    <div className="min-h-screen bg-[#F2EEE3] flex items-center justify-center px-4 py-12" dir="rtl">
-      <div className="max-w-md w-full">
+    <div className="min-h-screen bg-[#F2EEE3] flex items-center justify-center px-4 py-24 lg:py-32" dir="rtl">
+      <div className="max-w-lg w-full">
         <Link
           to="/"
           className="inline-flex items-center gap-2 text-[#4A7554] hover:text-[#5F8A61] mb-8 transition-colors font-bold"
@@ -45,13 +56,35 @@ export function LoginPage() {
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
-          className="bg-white rounded-[2.5rem] shadow-[0_10px_40px_rgba(74,117,84,0.12)] p-8 md:p-10 border border-[#E5DBC8]/30"
+          className="bg-white rounded-[2.5rem] shadow-[0_10px_40px_rgba(74,117,84,0.12)] p-8 md:p-12 border border-[#E5DBC8]/30"
         >
-          <div className="text-center mb-8">
-            <h1 className="text-[#4A7554] text-3xl font-extrabold mb-3">أهلاً بك</h1>
+          <div className="text-center mb-10">
+            <h1 className="text-[#4A7554] text-3xl md:text-4xl font-extrabold mb-4">أهلاً بك</h1>
             <p className="text-gray-500">سجل دخولك عشان تبدأ مشوارك مع ميكرو مصر</p>
           </div>
-          <form onSubmit={formik.handleSubmit} className="space-y-5">
+          <form onSubmit={formik.handleSubmit} className="space-y-6">
+            
+            <div className="mb-2">
+              <label className="block text-gray-700 mb-3 font-bold text-sm text-center">تسجيل الدخول كـ</label>
+              <div className="flex flex-col sm:flex-row gap-4 justify-center">
+                <button
+                  type="button"
+                  onClick={() => setAccountType('passenger')}
+                  className={`flex-1 max-w-[200px] py-4 px-6 rounded-2xl border-2 flex flex-col items-center gap-2 transition-all ${accountType === 'passenger' ? 'border-[#4A7554] bg-[#4A7554]/5 text-[#4A7554]' : 'border-[#E5DBC8] text-gray-500 hover:border-[#4A7554]/50'}`}
+                >
+                  <User size={28} className={accountType === 'passenger' ? 'text-[#4A7554]' : 'text-gray-400'} />
+                  <span className="font-bold">راكب</span>
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setAccountType('driver')}
+                  className={`flex-1 max-w-[200px] py-4 px-6 rounded-2xl border-2 flex flex-col items-center gap-2 transition-all ${accountType === 'driver' ? 'border-[#4A7554] bg-[#4A7554]/5 text-[#4A7554]' : 'border-[#E5DBC8] text-gray-500 hover:border-[#4A7554]/50'}`}
+                >
+                  <Car size={28} className={accountType === 'driver' ? 'text-[#4A7554]' : 'text-gray-400'} />
+                  <span className="font-bold">سائق</span>
+                </button>
+              </div>
+            </div>
             <div>
               <label className="block text-gray-700 mb-2 font-bold text-sm mr-1">البريد الإلكتروني</label>
               <div className="relative">
@@ -61,9 +94,10 @@ export function LoginPage() {
                   {...formik.getFieldProps('email')}
                   placeholder="example@mail.com"
                   className={`w-full pr-12 pl-4 py-4 border-2 rounded-2xl focus:outline-none transition-all text-right ${formik.touched.email && formik.errors.email
-                      ? 'border-red-300 focus:border-red-500'
+                      ? 'border-red-300 focus:border-red-500 bg-red-50'
                       : 'border-[#E5DBC8] focus:border-[#4A7554]'
                     }`}
+                  dir="ltr"
                 />
               </div>
               {formik.touched.email && formik.errors.email && (
@@ -79,7 +113,7 @@ export function LoginPage() {
                   {...formik.getFieldProps('password')}
                   placeholder="••••••••"
                   className={`w-full pr-12 pl-4 py-4 border-2 rounded-2xl focus:outline-none transition-all ${formik.touched.password && formik.errors.password
-                      ? 'border-red-300 focus:border-red-500'
+                      ? 'border-red-300 focus:border-red-500 bg-red-50'
                       : 'border-[#E5DBC8] focus:border-[#4A7554]'
                     }`}
                 />
@@ -88,24 +122,24 @@ export function LoginPage() {
                 <p className="text-red-500 text-xs mt-1 mr-2 font-medium">{formik.errors.password}</p>
               )}
             </div>
-            <diV className="flex items-center justify-between px-1">
+            <div className="flex items-center justify-between px-1">
               <label className="flex items-center gap-2 cursor-pointer group">
-                <input type="checkbox" className="w-4 h-4 rounded border-[#E5DBC8] text-[#4A7554] focus:ring-[#4A7554]" />
+                <input type="checkbox" className="w-4 h-4 rounded border-[#E5DBC8] text-[#4A7554] focus:ring-[#4A7554] cursor-pointer" />
                 <span className="text-gray-500 text-sm group-hover:text-[#4A7554] transition-colors">تذكرني </span>
               </label>
               <a href="#" className="text-[#4A7554] hover:underline font-bold text-xs">نسيت كلمة السر؟</a>
-            </diV>
+            </div>
             <button
               type="submit"
               disabled={formLoading}
-              className="w-full px-8 py-4 bg-[#4A7554] text-white rounded-2xl hover:bg-[#3d6145] transition-all shadow-lg hover:shadow-[#4A7554]/20 font-bold text-lg flex justify-center items-center gap-3 disabled:opacity-70"
+              className="w-full px-8 py-4 bg-[#4A7554] text-white rounded-2xl hover:bg-[#3d6145] transition-all shadow-lg hover:shadow-[#4A7554]/20 font-bold text-lg flex justify-center items-center gap-3 disabled:opacity-70 mt-2"
             >
               {formLoading ? (
                 <div className="w-6 h-6 border-3 border-white border-t-transparent rounded-full animate-spin"></div>
               ) : "دخول"}
             </button>
           </form>
-          <div className="relative my-9">
+          <div className="relative my-10">
             <div className="absolute inset-0 flex items-center"><div className="w-full border-t border-[#E5DBC8]"></div></div>
             <div className="relative flex justify-center"><span className="px-4 bg-white text-gray-400 text-xs font-bold uppercase tracking-widest">أو</span></div>
           </div>

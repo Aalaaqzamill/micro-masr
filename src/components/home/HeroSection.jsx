@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
-import heroo from "../assets/heroo.jpg";
-import hero22 from "../assets/hero22.jpg";
-import ScrollIndicator from "./ScrollIndicator";
+import heroo from "../../assets/heroo.jpg";
+import hero22 from "../../assets/hero22.jpg";
+import ScrollIndicator from "../common/ScrollIndicator";
 
 const heroImages = [heroo, hero22];
 
@@ -43,30 +43,45 @@ export function HeroSection() {
       ))}
 
       {/* Overlay */}
-      <div className="absolute inset-0 bg-gradient-to-l from-[#4A7554]/60 via-[#4A7554]/40 to-transparent z-10" />
+      <div className="absolute inset-0 bg-gradient-to-l from-[#4A7554]/80 via-[#4A7554]/50 to-transparent z-10" />
 
       {/* المحتوى */}
       <div className="relative z-20 h-full flex items-center">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
           <div className="max-w-2xl mr-0 ml-auto text-right">
-            <h2 className="text-white text-4xl sm:text-5xl lg:text-6xl mb-6 font-bold leading-tight">
-              اختيارك الأول للتنقل السريع في مصر
-            </h2>
+            <motion.h2 
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8 }}
+              className="text-white text-5xl sm:text-6xl lg:text-7xl mb-6 font-black leading-tight drop-shadow-lg"
+            >
+              طريقك أسهل،
+              <br />
+              <span className="text-[#E09162]">حجزك أسرع</span>
+            </motion.h2>
 
-            <p className="text-white/95 text-lg sm:text-xl mb-8 max-w-xl mr-0 ml-auto">
+            <motion.p 
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: 0.2 }}
+              className="text-white/95 text-lg sm:text-2xl mb-10 max-w-xl mr-0 ml-auto leading-relaxed drop-shadow-md font-medium"
+            >
               سافر لأي مكان في مصر بأمان وراحة. احجز مقعدك في ميكروباص حديث
-              ومكيف، أو اطلب ميكروباص مخصوص ليك ولعيلتك.
-            </p>
+              ومكيف، أو انشر رحلتك كسائق وزود دخلك.
+            </motion.p>
 
             <motion.button
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: 0.4 }}
               whileHover={{
                 scale: 1.05,
-                boxShadow: "0 20px 50px rgba(224,145,98,0.7)",
+                boxShadow: "0 20px 50px rgba(224,145,98,0.4)",
               }}
               whileTap={{ scale: 0.95 }}
-              className="px-8 py-4 bg-gradient-to-r from-[#FFB26B] via-[#E09162] to-[#D36B3D] text-white font-extrabold rounded-3xl shadow-lg text-lg"
+              className="px-10 py-5 bg-[#E09162] text-white font-extrabold rounded-full shadow-2xl text-xl hover:bg-[#d07f54] transition-colors"
             >
-              حمل التطبيق دلوقتي
+              ابدأ رحلتك الآن
             </motion.button>
           </div>
         </div>

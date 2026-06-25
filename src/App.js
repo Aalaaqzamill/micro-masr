@@ -1,23 +1,29 @@
 
 import { useState } from "react";
 import { Routes, Route, useLocation } from "react-router-dom";
-import { Navbar } from "./components/Navbar";
-import { Footer } from "./components/Footer";
-import { HeroSection } from "./components/HeroSection";
-import { BookingSection } from "./components/BookingSection";
-import { FeaturesSection } from "./components/FeaturesSection";
-import { HowItWorksSection } from "./components/HowItWorksSection";
-import { CTASection } from "./components/CTASection";
-import { SplashScreen } from "./components/SplashScreen";
-import AboutSection from "./components/AboutSection";
-import ContactUsPage from "./pages/ContactUsPage";
-import { LoginPage } from "./pages/LoginPage"; 
-import ScrollToTop from "./components/ScrollToTop";
-import { RegisterPage } from "./pages/RegisterPage";
-import { PassengerBookingPage } from "./pages/PassengerBookPage";
-import { PaymentPage } from "./pages/PaymentPage";
-import { DriverBookingPage } from './pages/DriverBookingPage';
-import { PaymentResultPage } from './pages/PaymentResultPage';
+import { Navbar } from "./components/layout/Navbar";
+import { Footer } from "./components/layout/Footer";
+import { HeroSection } from "./components/home/HeroSection";
+import { BookingSection } from "./components/home/BookingSection";
+import { FeaturesSection } from "./components/home/FeaturesSection";
+import { HowItWorksSection } from "./components/home/HowItWorksSection";
+import { CTASection } from "./components/home/CTASection";
+import { FAQSection } from "./components/home/FAQSection";
+import { SplashScreen } from "./components/common/SplashScreen";
+import AboutSection from "./components/home/AboutSection";
+import ContactUsPage from "./pages/contact/ContactUsPage";
+import { LoginPage } from "./pages/auth/LoginPage"; 
+import ScrollToTop from "./components/layout/ScrollToTop";
+import { RegisterPage } from "./pages/auth/RegisterPage";
+import { PassengerBookingPage } from "./pages/passenger/PassengerBookPage";
+import { PaymentPage } from "./pages/payment/PaymentPage";
+import { DriverBookingPage } from './pages/driver/DriverBookingPage';
+import { PaymentResultPage } from './pages/payment/PaymentResultPage';
+
+import { PassengerDashboardPage } from './pages/passenger/PassengerDashboardPage';
+import { PassengerBookingsPage } from './pages/passenger/PassengerBookingsPage';
+import { DriverDashboardPage } from './pages/driver/DriverDashboardPage';
+import { CreateTripPage } from './pages/driver/CreateTripPage';
 
 function Home() {
   return (
@@ -26,6 +32,7 @@ function Home() {
       <BookingSection />
       <FeaturesSection />
       <HowItWorksSection />
+      <FAQSection />
       <CTASection />
     </>
   );
@@ -40,15 +47,11 @@ function App() {
     return <SplashScreen onComplete={() => setLoading(false)} />;
   }
 
-  const showNavbarPaths = ["/", "/about", "/contact"];
-  const shouldShowNavbar = showNavbarPaths.includes(location.pathname);
-  const showFooterPaths = ["/", "/about"];
-  const shouldShowFooter = showFooterPaths.includes(location.pathname);
   return (
-    <div className="flex flex-col min-h-screen font-sans">
+    <div className="flex flex-col min-h-screen font-sans pt-20">
       <ScrollToTop /> 
       
-      {shouldShowNavbar && <Navbar />}
+      <Navbar />
 
       <main className="flex-grow">
         <Routes>
@@ -57,14 +60,20 @@ function App() {
           <Route path="/contact" element={<ContactUsPage />} />
           <Route path="/login" element={<LoginPage />} />
           <Route path="/register" element={<RegisterPage />} />
-           <Route path="/book-passenger" element={<PassengerBookingPage />} />
+          <Route path="/book-passenger" element={<PassengerBookingPage />} />
           <Route path="/payment" element={<PaymentPage />} />
           <Route path="/driver-booking" element={<DriverBookingPage/>}/>
-         <Route path="/payment-result" element={<PaymentResultPage />} />
+          <Route path="/payment-result" element={<PaymentResultPage />} />
+          
+          {/* Booking System Routes */}
+          <Route path="/passenger-dashboard" element={<PassengerDashboardPage />} />
+          <Route path="/passenger/bookings" element={<PassengerBookingsPage />} />
+          <Route path="/driver-dashboard" element={<DriverDashboardPage />} />
+          <Route path="/driver/create-trip" element={<CreateTripPage />} />
         </Routes>
       </main>
 
-      {shouldShowFooter && <Footer />}
+      <Footer />
     </div>
   );
 }
