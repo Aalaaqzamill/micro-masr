@@ -34,7 +34,7 @@ export function Navbar() {
     queryKey: ['notifications', { userId: user?.id }],
     queryFn: () => api.getNotifications(user?.id),
     enabled: !!user?.id,
-    refetchInterval: 10000 // Poll every 10s for new notifications
+    refetchInterval: 10000 
   });
 
   const markReadMutation = useMutation({
@@ -53,7 +53,7 @@ export function Navbar() {
       markReadMutation.mutate();
     }
   };
-  
+
   const isActive = (path) => location.pathname === path;
 
   const dashboardRoute = user?.accountType === 'driver' ? '/driver-dashboard' : '/passenger-dashboard';
@@ -80,7 +80,7 @@ export function Navbar() {
               className="text-[#4A7554] font-extrabold text-xl lg:text-2xl tracking-tight hidden sm:block"
               style={{ fontFamily: "'Playwrite NZ Basic', serif" }}
             >
-              ميكرو مصر 
+              ميكرو مصر
             </h1>
           </div>
 
@@ -92,7 +92,7 @@ export function Navbar() {
             >
               الرئيسية
             </button>
-            
+
             {isAuthenticated && (
               <button
                 onClick={() => navigate(dashboardRoute)}
@@ -118,29 +118,13 @@ export function Navbar() {
 
           {/* User Actions */}
           <div className="hidden lg:flex items-center gap-4">
-            
-            {isAuthenticated && (
-              <button
-                onClick={() => navigate(user?.accountType === 'driver' ? '/driver/create-trip' : '/book-passenger')}
-                className="px-5 py-2 bg-[#4A7554] text-white rounded-xl font-bold shadow-md shadow-[#4A7554]/20 hover:bg-[#3a5a41] hover:-translate-y-0.5 transition-all flex items-center gap-2"
-              >
-                {user?.accountType === 'driver' ? (
-                  <>
-                    <span className="text-xl leading-none -mt-1">+</span>
-                    أضف رحلة
-                  </>
-                ) : (
-                  <>احجز رحلة</>
-                )}
-              </button>
-            )}
 
             {isAuthenticated ? (
               <div className="flex items-center gap-4 relative" ref={dropdownRef}>
-                
+
                 {/* Notifications Bell */}
                 <div className="relative">
-                  <button 
+                  <button
                     onClick={handleNotifClick}
                     className="relative p-2 text-gray-500 hover:text-[#4A7554] hover:bg-gray-50 rounded-full transition-colors"
                   >
@@ -160,15 +144,43 @@ export function Navbar() {
                         exit={{ opacity: 0, y: 10 }}
                         className="absolute left-0 lg:left-1/2 lg:-translate-x-1/2 mt-2 w-80 bg-white rounded-2xl shadow-xl border border-gray-100 overflow-hidden py-2 z-50 max-h-96 flex flex-col"
                       >
-                        <div className="px-4 py-3 border-b border-gray-100 bg-gray-50">
-                          <h3 className="font-bold text-[#4A7554]">الإشعارات</h3>
-                        </div>
-                        <div className="overflow-y-auto flex-1">
-                          {notifications && notifications.length > 0 ? (
-                            notifications.map(notif => (
-                              <div key={notif.id} className={`p-4 border-b border-gray-50 text-right hover:bg-gray-50 transition-colors cursor-pointer ${!notif.read ? 'bg-[#4A7554]/5' : ''}`}>
-                                <p className={`text-sm ${!notif.read ? 'font-bold text-gray-800' : 'text-gray-600'}`}>{notif.message}</p>
-                                <p className="text-xs text-gray-400 mt-1">{new Date(notif.createdAt).toLocaleTimeString('ar-EG', { hour: '2-digit', minute: '2-digit' })}</p>
+                        <div className="overflow-y-auto flex-1 max-h-96">
+                          {notifications?.length > 0 ? (
+                            notifications.map((notif) => (
+                              <div
+                                key={notif.id}
+                                onClick={() => {
+                                  setIsNotifOpen(false);
+
+                                  if (user?.accountType === "driver") {
+                                    navigate("/driver-dashboard", {
+                                      state: { 
+                                        activeTab: "requests",
+                                        bookingId: notif.bookingId || notif.id 
+                                      },
+                                    });
+                                    return;
+                                  }
+
+                                  navigate("/passenger/bookings", {
+                                    state: { highlightBookingId: notif.bookingId || notif.id }
+                                  });
+                                }}
+                                className={`p-4 border-b text-right cursor-pointer hover:bg-gray-50 transition-colors ${!notif.read ? "bg-[#4A7554]/5" : ""
+                                  }`}
+                              >
+                                <p className="text-sm text-gray-700 font-medium">
+                                  {notif.message}
+                                </p>
+
+                                <p className="text-xs text-gray-400 mt-1">
+                                  {notif.createdAt
+                                    ? new Date(notif.createdAt).toLocaleTimeString("ar-EG", {
+                                      hour: "2-digit",
+                                      minute: "2-digit",
+                                    })
+                                    : ""}
+                                </p>
                               </div>
                             ))
                           ) : (
@@ -183,49 +195,60 @@ export function Navbar() {
                 </div>
 
                 <div className="relative">
-                  <button 
+                  <button
                     onClick={() => { setIsProfileOpen(!isProfileOpen); setIsNotifOpen(false); }}
-                  className="flex items-center gap-3 hover:bg-gray-50 p-2 rounded-xl transition-colors"
-                >
-                  <div className="flex flex-col items-end">
-                    <span className="font-bold text-[#4A7554] text-sm leading-tight">{user?.fullname || 'حسابي'}</span>
-                    <span className="text-xs text-gray-500 leading-tight">{user?.accountType === 'driver' ? 'سائق' : 'راكب'}</span>
-                  </div>
-                  <div className="w-10 h-10 rounded-full bg-[#4A7554]/10 text-[#4A7554] flex items-center justify-center font-bold text-lg border border-[#4A7554]/20 shadow-sm">
-                    {user?.fullname ? user.fullname.charAt(0) : 'U'}
-                  </div>
-                  <ChevronDown size={16} className={`text-gray-400 transition-transform ${isProfileOpen ? 'rotate-180' : ''}`} />
-                </button>
+                    className="flex items-center gap-3 hover:bg-gray-50 p-2 rounded-xl transition-colors"
+                  >
+                    <div className="flex flex-col items-end">
+                      <span className="font-bold text-[#4A7554] text-sm leading-tight">{user?.fullname || 'حسابي'}</span>
+                      <span className="text-xs text-gray-500 leading-tight">{user?.accountType === 'driver' ? 'سائق' : 'راكب'}</span>
+                    </div>
+                    <div className="w-10 h-10 rounded-full bg-[#4A7554]/10 text-[#4A7554] flex items-center justify-center font-bold text-lg border border-[#4A7554]/20 shadow-sm">
+                      {user?.fullname ? user.fullname.charAt(0) : 'U'}
+                    </div>
+                    <ChevronDown size={16} className={`text-gray-400 transition-transform ${isProfileOpen ? 'rotate-180' : ''}`} />
+                  </button>
 
-                <AnimatePresence>
-                  {isProfileOpen && (
-                    <motion.div
-                      initial={{ opacity: 0, y: 10 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      exit={{ opacity: 0, y: 10 }}
-                      className="absolute left-0 mt-2 w-56 bg-white rounded-2xl shadow-xl border border-gray-100 overflow-hidden py-2"
-                    >
-                      <button onClick={() => { setIsProfileOpen(false); navigate(dashboardRoute); }} className="w-full text-right px-4 py-3 flex items-center gap-3 hover:bg-gray-50 text-gray-700 font-bold">
-                        <User size={18} className="text-[#4A7554]" /> ملفي الشخصي
-                      </button>
-                      <button onClick={() => { setIsProfileOpen(false); navigate(user?.accountType === 'passenger' ? '/passenger/bookings' : dashboardRoute); }} className="w-full text-right px-4 py-3 flex items-center gap-3 hover:bg-gray-50 text-gray-700 font-bold">
-                        <MapPin size={18} className="text-[#4A7554]" /> {user?.accountType === 'driver' ? 'رحلاتي وحجوزاتي' : 'حجوزاتي'}
-                      </button>
-                      <div className="border-t border-gray-100 my-1"></div>
-                      <button
-                        onClick={() => {
-                          logout();
-                          setIsProfileOpen(false);
-                          navigate("/");
-                        }}
-                        className="w-full text-right px-4 py-3 flex items-center gap-3 hover:bg-red-50 text-red-500 font-bold"
+                  <AnimatePresence>
+                    {isProfileOpen && (
+                      <motion.div
+                        initial={{ opacity: 0, y: 10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: 10 }}
+                        className="absolute left-0 mt-2 w-56 bg-white rounded-2xl shadow-xl border border-gray-100 overflow-hidden py-2"
                       >
-                        <LogOut size={18} /> تسجيل الخروج
-                      </button>
-                    </motion.div>
-                  )}
-                </AnimatePresence>
-              </div>
+                        <button
+                          onClick={() => {
+                            setIsProfileOpen(false);
+                            if (user?.accountType === 'driver') {
+                              navigate("/driver-profile");
+                            } else {
+                              navigate("/passenger-profile");
+                            }
+                          }}
+                          className="w-full text-right px-4 py-3 flex items-center gap-3 hover:bg-gray-50 text-gray-700 font-bold"
+                        >
+                          <User size={18} className="text-[#4A7554]" />
+                          ملفي الشخصي
+                        </button>
+                        <button onClick={() => { setIsProfileOpen(false); navigate(user?.accountType === 'passenger' ? '/passenger/bookings' : dashboardRoute); }} className="w-full text-right px-4 py-3 flex items-center gap-3 hover:bg-gray-50 text-gray-700 font-bold">
+                          <MapPin size={18} className="text-[#4A7554]" /> {user?.accountType === 'driver' ? 'رحلاتي وحجوزاتي' : 'حجوزاتي'}
+                        </button>
+                        <div className="border-t border-gray-100 my-1"></div>
+                        <button
+                          onClick={() => {
+                            logout();
+                            setIsProfileOpen(false);
+                            navigate("/");
+                          }}
+                          className="w-full text-right px-4 py-3 flex items-center gap-3 hover:bg-red-50 text-red-500 font-bold"
+                        >
+                          <LogOut size={18} /> تسجيل الخروج
+                        </button>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+                </div>
               </div>
             ) : (
               <div className="flex items-center gap-3">
@@ -254,7 +277,7 @@ export function Navbar() {
           {/* Mobile Menu Toggle */}
           <div className="flex lg:hidden items-center">
             <button
-              onClick={() => setIsOpen(!isOpen)}
+              onClick={() => { setIsOpen(!isOpen); }}
               className="flex items-center gap-2 px-4 py-2 bg-white border-2 border-[#4A7554] rounded-full shadow-sm font-bold text-[#4A7554] active:scale-95 transition-all"
             >
               <span className="text-sm">القائمة</span>
@@ -295,11 +318,32 @@ export function Navbar() {
               >
                 تواصل معنا
               </button>
-              
+
               <div className="pt-4 border-t border-[#E5DBC8]/50 mt-2">
                 {isAuthenticated ? (
                   <div className="flex flex-col gap-3 px-2">
-                    <div className="flex items-center gap-3 px-4 py-2">
+                    
+                    {/* روابط إضافية للموبايل */}
+                    <button
+                      onClick={() => {
+                        navigate(user?.accountType === 'driver' ? "/driver-profile" : "/passenger-profile");
+                        setIsOpen(false);
+                      }}
+                      className="text-right px-6 py-4 rounded-xl font-bold text-gray-600 hover:bg-gray-50"
+                    >
+                      ملفي الشخصي
+                    </button>
+                    <button
+                      onClick={() => {
+                        navigate(user?.accountType === 'driver' ? dashboardRoute : '/passenger/bookings');
+                        setIsOpen(false);
+                      }}
+                      className="text-right px-6 py-4 rounded-xl font-bold text-gray-600 hover:bg-gray-50"
+                    >
+                      {user?.accountType === 'driver' ? 'رحلاتي وحجوزاتي' : 'حجوزاتي'}
+                    </button>
+
+                    <div className="flex items-center gap-3 px-4 py-2 mt-2">
                       <div className="w-12 h-12 rounded-full bg-[#4A7554]/10 text-[#4A7554] flex items-center justify-center font-bold text-xl border border-[#4A7554]/20">
                         {user?.fullname ? user.fullname.charAt(0) : 'U'}
                       </div>
@@ -308,16 +352,6 @@ export function Navbar() {
                         <span className="text-sm text-gray-500">{user?.accountType === 'driver' ? 'سائق' : 'راكب'}</span>
                       </div>
                     </div>
-
-                    <button
-                      onClick={() => {
-                        navigate(user?.accountType === 'driver' ? '/driver/create-trip' : '/book-passenger');
-                        setIsOpen(false);
-                      }}
-                      className="w-full mt-4 py-3 bg-[#4A7554] text-white rounded-xl font-bold flex items-center justify-center gap-2 shadow-md shadow-[#4A7554]/20"
-                    >
-                      {user?.accountType === 'driver' ? '+ أضف رحلة' : 'احجز رحلة'}
-                    </button>
 
                     <button
                       onClick={() => {

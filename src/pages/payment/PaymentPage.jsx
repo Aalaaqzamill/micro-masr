@@ -2,9 +2,11 @@ import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { ArrowRight, MapPin, Calendar, Users, Smartphone, CreditCard, CheckCircle, Shield } from 'lucide-react';
 import { useState } from 'react';
 import { toast } from 'sonner';
+import { api } from "../../services/api";
 export function PaymentPage() {
   const navigate = useNavigate();
   const location = useLocation();
+  console.log("PAYMENT STATE =", location.state);
   const tripDetails = location.state;
   const [phoneNumber, setPhoneNumber] = useState('');
   const [isProcessing, setIsProcessing] = useState(false);
@@ -22,10 +24,9 @@ export function PaymentPage() {
     );
   }
 
-  const serviceFee = tripDetails.price * 0.05;
-  const total = tripDetails.price + serviceFee;
+  const total = (tripDetails.price || 0) * (tripDetails.passengers || 1);
 
-  const handlePayment = (e) => {
+  const handlePayment = async (e) => {
     e.preventDefault();
     if (!phoneNumber || phoneNumber.length !== 11) {
       navigate('/payment-result', {
@@ -39,10 +40,13 @@ export function PaymentPage() {
 
     setIsProcessing(true);
 
-    setTimeout(() => {
+    setTimeout(async () => {
       setIsProcessing(false);
+      await api.updateBookingStatus(
+        tripDetails.bookingId,
+        "paid"
+      );
       toast.success('تم الدفع بنجاح! ستصلك رسالة تأكيد قريباً');
-
       setTimeout(() => {
         navigate('/payment-result', {
           state: {
@@ -81,13 +85,13 @@ export function PaymentPage() {
     <div className="min-h-screen bg-[#F2EEE3]" dir="rtl">
       <div className="bg-white shadow-sm sticky top-0 z-10">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
-          <Link
-            to="/passenger-booking"
-            className="inline-flex items-center gap-2 text-[#4A7554] hover:text-[#5F8A61] transition-colors font-medium"
+          <button
+            onClick={() => navigate(-1)}
+            className="inline-flex items-center gap-2 text-[#4A7554] hover:text-[#5F8A61]"
           >
             <ArrowRight size={20} className="ml-1" />
             رجوع
-          </Link>
+          </button>
         </div>
       </div>
 
@@ -170,20 +174,37 @@ export function PaymentPage() {
                   <span>{tripDetails.date}</span>
                 </div>
                 <div className="flex items-center justify-between text-sm">
+                  <span>موعد التحرك</span>
+                  <span>{new Date(tripDetails.date).toLocaleTimeString("ar-EG", {
+                    hour: "2-digit",
+                    minute: "2-digit",
+                  })}</span>
+                </div>
+
+                <div className="flex items-center justify-between text-sm">
+                  <span>السائق</span>
+                  <span>{tripDetails.driver}</span>
+                </div>
+                <div className="flex items-center justify-between text-sm">
                   <span>عدد الأفراد</span>
                   <span>{tripDetails.passengers}</span>
                 </div>
               </div>
               <div className="pt-4 border-t border-gray-200">
-                <div className="flex justify-between">
+                <div className="flex justify-between mb-2">
+                  <span>سعر الرحلة</span>
+                  <span>{tripDetails.price} ج.م</span>
+                </div>
+
+                <div className="flex justify-between font-bold">
                   <span>الإجمالي</span>
-                  <span className="font-bold text-[#4A7554]">{total.toFixed(2)} ج.م</span>
+                  <span className="text-[#4A7554]">{total.toFixed(2)} ج.م</span>
                 </div>
               </div>
             </div>
           </div>
         </div>
-      </div> 
-    </div>
+      </div>
+    </div >
   );
 }

@@ -76,7 +76,7 @@ export function HowItWorksSection() {
                 transition={{ duration: 0.5, delay: index * 0.15 }}
                 className="relative z-10 flex flex-col items-center text-center group"
               >
-                <div className="w-24 h-24 rounded-[2rem] bg-white border-2 border-gray-100 flex items-center justify-center mb-8 shadow-sm group-hover:shadow-xl group-hover:-translate-y-2 group-hover:border-[#4A7554]/30 transition-all duration-300 relative">
+                <div className="w-24 h-24 rounded-[2rem] bg-white border-2 border-gray-100 flex items-center justify-center mb-8 shadow-sm group-hover:shadow-xl group-hover:border-[#4A7554]/30 transition-all duration-300 relative">
                   <div className="absolute -top-3 -right-3 w-8 h-8 bg-[#E09162] rounded-full flex items-center justify-center text-white font-bold text-sm shadow-md">
                     {step.number}
                   </div>

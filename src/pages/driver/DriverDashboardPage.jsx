@@ -1,16 +1,20 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { api } from '../../services/api';
 import { useAuth } from '../../context/AuthContext';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { toast } from 'sonner';
-import { Plus, MapPin, Users, Check, X, Clock, Edit3, Save } from 'lucide-react';
+import { Plus, MapPin, Users, Check, X, Clock, Edit3, Save, MessageSquare, CheckCircle2 } from 'lucide-react';
 
 export function DriverDashboardPage() {
   const { user } = useAuth();
   const navigate = useNavigate();
+  const location = useLocation();
   const queryClient = useQueryClient();
-  const [activeTab, setActiveTab] = useState('trips'); // trips | requests
+
+  const [activeTab, setActiveTab] = useState(
+    location.state?.bookingId ? "requests" : (location.state?.activeTab || "trips")
+  );
   const [selectedTripForEdit, setSelectedTripForEdit] = useState(null);
   const [editForm, setEditForm] = useState({});
 
@@ -25,6 +29,24 @@ export function DriverDashboardPage() {
     queryFn: () => api.getBookingsByDriver(user?.id),
     enabled: !!user?.id
   });
+
+  // تأثير تتبع الإشعارات للانتقال إلى مربع الحجز المحدد تلقائياً (Scroll to Booking)
+  useEffect(() => {
+    if (location.state?.bookingId && !isLoadingBookings) {
+      // ننتظر جزءاً من الثانية حتى تتأكد React من رندر عناصر الصفحة بالكامل
+      setTimeout(() => {
+        const element = document.getElementById(`booking-card-${location.state.bookingId}`);
+        if (element) {
+          element.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          // إضافة تأثير وميض مؤقت ليميز السائق الكارت المطلوب بسهولة
+          element.classList.add('ring-4', 'ring-[#4A7554]', 'scale-[1.01]');
+          setTimeout(() => {
+            element.classList.remove('ring-4', 'ring-[#4A7554]', 'scale-[1.01]');
+          }, 3000);
+        }
+      }, 300);
+    }
+  }, [location.state?.bookingId, isLoadingBookings]);
 
   const updateBookingMutation = useMutation({
     mutationFn: ({ bookingId, status }) => api.updateBookingStatus(bookingId, status),
@@ -63,6 +85,7 @@ export function DriverDashboardPage() {
   };
 
   const pendingBookings = bookings?.filter(b => b.status === 'pending') || [];
+  const paidBookings = bookings?.filter(b => b.status === 'paid') || [];
 
   return (
     <div className="min-h-screen bg-[#F2EEE3] py-12 px-4" dir="rtl">
@@ -92,7 +115,7 @@ export function DriverDashboardPage() {
               onClick={() => setActiveTab('requests')}
               className={`flex-1 py-4 font-bold text-lg transition-colors relative ${activeTab === 'requests' ? 'text-[#4A7554] border-b-2 border-[#4A7554] bg-[#4A7554]/5' : 'text-gray-500 hover:bg-gray-50'}`}
             >
-              طلبات الحجز
+              طلبات الحجز ومتابعة الركاب
               {pendingBookings.length > 0 && (
                 <span className="absolute top-1/2 -translate-y-1/2 mr-2 w-6 h-6 bg-red-500 text-white rounded-full text-xs flex items-center justify-center">
                   {pendingBookings.length}
@@ -120,7 +143,7 @@ export function DriverDashboardPage() {
                         </div>
                         <h3 className="font-bold text-lg mb-2 flex items-center gap-2"><MapPin size={18} className="text-gray-400" /> {trip.governorate} ({trip.station})</h3>
                         <p className="text-gray-600 mb-4 pr-6">إلى: <span className="font-bold">{trip.destination}</span></p>
-                        
+
                         <div className="flex items-center gap-4 text-sm text-gray-500 mb-4 bg-gray-50 p-3 rounded-xl">
                           <div className="flex items-center gap-1"><Users size={16} /> المقاعد: {trip.availableSeats}/{trip.totalSeats}</div>
                           <div className="flex items-center gap-1"><Clock size={16} /> {new Date(trip.departureTime).toLocaleTimeString('ar-EG', { hour: '2-digit', minute: '2-digit' })}</div>
@@ -141,49 +164,100 @@ export function DriverDashboardPage() {
             )}
 
             {activeTab === 'requests' && (
-              <div className="space-y-6">
+              <div className="space-y-8">
                 {isLoadingBookings ? (
                   <div className="flex justify-center p-10"><div className="w-8 h-8 border-4 border-[#4A7554] border-t-transparent rounded-full animate-spin"></div></div>
-                ) : pendingBookings.length === 0 ? (
-                  <div className="text-center py-12 text-gray-500">لا توجد طلبات حجز معلقة حالياً.</div>
+                ) : pendingBookings.length === 0 && paidBookings.length === 0 ? (
+                  <div className="text-center py-12 text-gray-500">لا توجد طلبات حجز حالياً.</div>
                 ) : (
-                  <div className="space-y-4">
-                    {pendingBookings.map(booking => {
-                      const trip = trips?.find(t => t.id === booking.tripId);
-                      return (
-                        <div key={booking.id} className="flex flex-col md:flex-row justify-between border-2 border-gray-100 p-5 rounded-2xl gap-6 hover:border-[#4A7554]/30 transition-colors">
-                          <div className="flex-1">
-                            <h4 className="font-bold text-lg text-[#4A7554] mb-3 flex items-center gap-2">
-                              <Users size={20} /> طلب حجز من: {booking.passengerName}
-                            </h4>
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-3 text-sm text-gray-700 bg-gray-50 p-4 rounded-xl">
-                              <p><strong>الوجهة المطلوبة:</strong> {trip?.destination} ({trip ? new Date(trip.departureTime).toLocaleTimeString('ar-EG', { hour: '2-digit', minute: '2-digit' }) : ''})</p>
-                              <p><strong>مكان الانتظار:</strong> {booking.pickupLocation || 'لم يحدد'}</p>
-                              <p><strong>رقم الهاتف:</strong> <a href={`tel:${booking.phoneNumber}`} className="text-blue-600 hover:underline font-bold" dir="ltr">{booking.phoneNumber || 'غير متوفر'}</a></p>
-                              <p><strong>المقاعد المطلوبة:</strong> {booking.seatsCount || 1}</p>
-                              {booking.notes && <p className="md:col-span-2"><strong>ملاحظات الراكب:</strong> {booking.notes}</p>}
-                            </div>
-                          </div>
-                          <div className="flex flex-col sm:flex-row md:flex-col items-center gap-3 justify-center min-w-[140px]">
-                            <button
-                              onClick={() => updateBookingMutation.mutate({ bookingId: booking.id, status: 'accepted' })}
-                              className="w-full px-6 py-3 bg-[#4A7554] text-white rounded-xl font-bold hover:bg-[#3d6145] transition-colors flex items-center justify-center gap-2 shadow-sm"
-                              disabled={updateBookingMutation.isPending}
-                            >
-                              <Check size={18} /> قبول الطلب
-                            </button>
-                            <button
-                              onClick={() => updateBookingMutation.mutate({ bookingId: booking.id, status: 'rejected' })}
-                              className="w-full px-4 py-3 border-2 border-red-100 text-red-500 rounded-xl font-bold hover:bg-red-50 transition-colors flex items-center justify-center gap-2"
-                              disabled={updateBookingMutation.isPending}
-                            >
-                              <X size={18} /> رفض
-                            </button>
-                          </div>
+                  <>
+                    {/* قسم الطلبات المعلقة الجديدة */}
+                    {pendingBookings.length > 0 && (
+                      <div>
+                        <h3 className="text-xl font-bold text-yellow-600 mb-4 flex items-center gap-2"> طلبات معلقة بانتظار موافقتك</h3>
+                        <div className="space-y-4">
+                          {pendingBookings.slice().reverse().map(booking => {
+                            const trip = trips?.find(t => t.id === booking.tripId);
+                            return (
+                              <div
+                                key={booking.id}
+                                id={`booking-card-${booking.id}`}
+                                className="flex flex-col md:flex-row justify-between border-2 border-yellow-100 p-5 rounded-2xl gap-6 bg-yellow-50/20 transition-all duration-500"
+                              >
+                                <div className="flex-1">
+                                  <h4 className="font-bold text-lg text-[#4A7554] mb-3 flex items-center gap-2">
+                                    <Users size={20} /> طلب حجز من: {booking.passengerName}
+                                  </h4>
+                                  <div className="grid grid-cols-1 md:grid-cols-2 gap-3 text-sm text-gray-700 bg-white/80 p-4 rounded-xl shadow-sm">
+                                    <p><strong>الوجهة المطلوبة:</strong> {trip?.destination} ({trip ? new Date(trip.departureTime).toLocaleTimeString('ar-EG', { hour: '2-digit', minute: '2-digit' }) : ''})</p>
+                                    <p><strong>مكان الانتظار:</strong> {booking.pickupLocation || 'لم يحدد'}</p>
+                                    <p><strong>رقم الهاتف:</strong> <a href={`tel:${booking.phoneNumber}`} className="text-blue-600 hover:underline font-bold" dir="ltr">{booking.phoneNumber || 'غير متوفر'}</a></p>
+                                    <p><strong>المقاعد المطلوبة:</strong> {booking.seatsCount || 1}</p>
+                                    {booking.notes && <p className="md:col-span-2"><strong>ملاحظات الراكب:</strong> {booking.notes}</p>}
+                                  </div>
+                                </div>
+                                <div className="flex flex-col sm:flex-row md:flex-col items-center gap-3 justify-center min-w-[140px]">
+                                  <button
+                                    onClick={() => updateBookingMutation.mutate({ bookingId: booking.id, status: 'accepted' })}
+                                    className="w-full px-6 py-3 bg-[#4A7554] text-white rounded-xl font-bold hover:bg-[#3d6145] transition-colors flex items-center justify-center gap-2 shadow-sm"
+                                    disabled={updateBookingMutation.isPending}
+                                  >
+                                    <Check size={18} /> قبول الطلب
+                                  </button>
+                                  <button
+                                    onClick={() => updateBookingMutation.mutate({ bookingId: booking.id, status: 'rejected' })}
+                                    className="w-full px-4 py-3 border-2 border-red-100 text-red-500 rounded-xl font-bold hover:bg-red-50 transition-colors flex items-center justify-center gap-2"
+                                    disabled={updateBookingMutation.isPending}
+                                  >
+                                    <X size={18} /> رفض
+                                  </button>
+                                </div>
+                              </div>
+                            );
+                          })}
                         </div>
-                      );
-                    })}
-                  </div>
+                      </div>
+                    )}
+
+
+                    {paidBookings.length > 0 && (
+                      <div className="pt-4">
+                        <h3 className="text-xl font-bold text-green-700 mb-4 flex items-center gap-2">
+                          <CheckCircle2 size={24} className="text-green-600" /> ركاب تم تأكيد حجزهم ودفعوا التذكرة
+                        </h3>
+                        <div className="space-y-4">
+                          {paidBookings.slice().reverse().map(booking => {
+                            const trip = trips?.find(t => t.id === booking.tripId);
+                            return (
+                              <div
+                                key={booking.id}
+                                id={`booking-card-${booking.id}`}
+                                className="flex flex-col md:flex-row justify-between border-2 border-green-200 p-5 rounded-2xl gap-6 bg-green-50/20 transition-all duration-500"
+                              >
+                                <div className="flex-1">
+                                  <div className="flex items-center justify-between mb-3">
+                                    <h4 className="font-bold text-lg text-gray-800 flex items-center gap-2">
+                                      <Users size={20} className="text-[#4A7554]" /> الراكب: {booking.passengerName}
+                                    </h4>
+                                    <span className="bg-green-100 text-green-800 px-3 py-1 rounded-full text-xs font-bold">تم تأكيد الدفع</span>
+                                  </div>
+                                  <div className="grid grid-cols-1 md:grid-cols-2 gap-3 text-sm text-gray-700 bg-white p-4 rounded-xl shadow-sm">
+                                    <p><strong>الوجهة:</strong> {trip?.destination}</p>
+                                    <p><strong>مكان المقابلة:</strong> {booking.pickupLocation || 'لم يحدد'}</p>
+                                    <p><strong>المقاعد المحجوزة:</strong> {booking.seatsCount || 1}</p>
+                                    <p><strong>رقم الهاتف للضرورة:</strong> <span className="font-bold" dir="ltr">{booking.phoneNumber || 'غير متوفر'}</span></p>
+                                  </div>
+                                </div>
+                                <div className="mt-4 w-12 h-12 bg-[#5F8A61] text-white rounded-xl font-bold hover:opacity-90 transition-opacity flex items-center justify-center shadow-md cursor-pointer aspect-square">
+                                  <MessageSquare size={20} />
+                                </div>
+                              </div>
+                            );
+                          })}
+                        </div>
+                      </div>
+                    )}
+                  </>
                 )}
               </div>
             )}
@@ -249,7 +323,7 @@ export function DriverDashboardPage() {
                   className="w-full px-4 py-3 border-2 border-[#E5DBC8] rounded-xl focus:outline-none focus:border-[#4A7554] transition-colors min-h-[100px]"
                 />
               </div>
-              
+
               <div className="flex gap-3 pt-4">
                 <button
                   type="button"

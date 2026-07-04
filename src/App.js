@@ -24,6 +24,8 @@ import { PassengerDashboardPage } from './pages/passenger/PassengerDashboardPage
 import { PassengerBookingsPage } from './pages/passenger/PassengerBookingsPage';
 import { DriverDashboardPage } from './pages/driver/DriverDashboardPage';
 import { CreateTripPage } from './pages/driver/CreateTripPage';
+import { PassengerProfile } from "./pages/passenger/PassengerProfilePage";
+import { DriverProfilePage} from "./pages/driver/DriverProfilePage";
 
 function Home() {
   return (
@@ -65,11 +67,15 @@ function App() {
           <Route path="/driver-booking" element={<DriverBookingPage/>}/>
           <Route path="/payment-result" element={<PaymentResultPage />} />
           
+          
           {/* Booking System Routes */}
           <Route path="/passenger-dashboard" element={<PassengerDashboardPage />} />
           <Route path="/passenger/bookings" element={<PassengerBookingsPage />} />
           <Route path="/driver-dashboard" element={<DriverDashboardPage />} />
           <Route path="/driver/create-trip" element={<CreateTripPage />} />
+          <Route path="/passenger-profile" element={<PassengerProfile />} />
+          <Route path="/driver-profile" element={<DriverProfilePage />} />
+          
         </Routes>
       </main>
 

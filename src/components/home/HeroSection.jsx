@@ -81,7 +81,7 @@ export function HeroSection() {
               whileTap={{ scale: 0.95 }}
               className="px-10 py-5 bg-[#E09162] text-white font-extrabold rounded-full shadow-2xl text-xl hover:bg-[#d07f54] transition-colors"
             >
-              ابدأ رحلتك الآن
+           نزل التطبيق دلوقت
             </motion.button>
           </div>
         </div>

@@ -78,9 +78,7 @@ export function FeaturesSection() {
                   delay: index * 0.1,
                   ease: "easeOut"
                 }}
-                whileHover={{
-                  y: -8,
-                }}
+               
                 className="bg-white/80 backdrop-blur-xl border border-white p-8 rounded-[2rem] shadow-sm hover:shadow-2xl transition-all duration-300 group"
               >
                 <div className="w-16 h-16 bg-[#4A7554]/10 rounded-[1.25rem] flex items-center justify-center mb-6 group-hover:bg-[#E09162] group-hover:text-white transition-colors duration-300">

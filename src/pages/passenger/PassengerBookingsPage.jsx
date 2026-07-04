@@ -1,11 +1,13 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { api } from '../../services/api';
 import { useAuth } from '../../context/AuthContext';
-import { Clock, CheckCircle2, XCircle, MapPin, Bus } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import { Clock, CheckCircle2, XCircle, MapPin, Bus, MessageSquare } from 'lucide-react';
+import { Link, useNavigate, useLocation } from "react-router-dom";
 
 export function PassengerBookingsPage() {
+  const navigate = useNavigate();
+  const location = useLocation();
   const { user } = useAuth();
 
   const { data: bookings, isLoading } = useQuery({
@@ -19,6 +21,30 @@ export function PassengerBookingsPage() {
     queryFn: () => api.getTrips()
   });
 
+  useEffect(() => {
+    const targetId = location.state?.highlightBookingId;
+
+    if (targetId && bookings && bookings.length > 0) {
+      setTimeout(() => {
+        const element = document.getElementById(`booking-${targetId}`);
+        if (element) {
+          element.scrollIntoView({ behavior: 'smooth', block: 'center' });
+
+
+          element.style.transition = 'all 0.5s ease-in-out';
+          element.style.boxShadow = '0 0 0 4px rgba(74, 117, 84, 0.4)';
+          element.style.borderColor = '#4A7554';
+
+
+          setTimeout(() => {
+            element.style.boxShadow = '';
+            element.style.borderColor = '';
+          }, 2500);
+        }
+      }, 400);
+    }
+  }, [location.state, bookings]);
+
   const getStatusDisplay = (status) => {
     switch (status) {
       case 'accepted':
@@ -28,6 +54,14 @@ export function PassengerBookingsPage() {
       case 'pending':
       default:
         return { text: 'قيد الانتظار', color: 'text-yellow-600', bg: 'bg-yellow-50', border: 'border-yellow-200', icon: <Clock size={24} /> };
+      case 'paid':
+        return {
+          text: 'تم الدفع',
+          color: 'text-green-700',
+          bg: 'bg-green-50',
+          border: 'border-green-300',
+          icon: <CheckCircle2 size={24} />
+        };
     }
   };
 
@@ -59,7 +93,11 @@ export function PassengerBookingsPage() {
               const statusDisplay = getStatusDisplay(booking.status);
 
               return (
-                <div key={booking.id} className={`bg-white rounded-3xl p-6 shadow-sm border-2 ${statusDisplay.border} transition-shadow`}>
+                <div
+                  key={booking.id}
+                  id={`booking-${booking.id}`}
+                  className={`bg-white rounded-3xl p-6 shadow-sm border-2 ${statusDisplay.border} transition-all duration-300`}
+                >
                   <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 border-b pb-4 gap-4">
                     <div className="flex items-center gap-3">
                       <div className={`${statusDisplay.bg} ${statusDisplay.color} p-3 rounded-full`}>
@@ -98,17 +136,56 @@ export function PassengerBookingsPage() {
                   ) : (
                     <p className="text-gray-500 p-4 bg-gray-50 rounded-xl">جاري تحميل تفاصيل الرحلة...</p>
                   )}
-                  
-                  {booking.status === 'accepted' && (
-                    <div className="mt-4 bg-green-50 border border-green-200 text-green-800 p-4 rounded-xl flex items-start gap-3">
-                      <CheckCircle2 size={24} className="text-green-600 flex-shrink-0 mt-0.5" />
-                      <p className="text-sm">
-                        <strong>تهانينا!</strong> لقد قبل السائق طلبك. يرجى التواجد في المكان المتفق عليه (<strong>{booking.pickupLocation}</strong>) قبل موعد التحرك. 
-                        سعر التذكرة للراكب الواحد: {trip?.pricePerPassenger} ج.م.
-                      </p>
+
+                  {booking.status === "accepted" && (
+                    <div>
+                      <div className="bg-green-50 border border-green-200 rounded-xl p-4 mt-4">
+                        <p className="text-green-700 font-medium">
+                          لقد قبل السائق طلبك، يمكنك الدفع الآن لتأكيد الحجز
+                        </p>
+                      </div>
+
+                      <button
+                        onClick={() =>
+                          navigate("/payment", {
+                            state: {
+                              tripId: booking.tripId,
+                              paymentMethod: "vodafone",
+                              driverId: trip?.driverId,
+                              passengerName: user?.fullname,
+                              price: trip?.pricePerPassenger,
+                              from: `${trip?.governorate} - ${trip?.station}`,
+                              to: trip?.destination,
+                              bookingId: booking.id,
+                              passengers: booking.seatsCount,
+                              date: trip?.departureTime,
+                              driver: trip?.driverName,
+                            },
+                          })
+                        }
+                        className="bg-[#4A7554] text-white px-5 py-2 rounded-lg mt-4 hover:bg-[#3d6145] transition-colors"
+                      >
+                        ادفع الآن
+                      </button>
                     </div>
                   )}
-                  
+
+                  {booking.status === "paid" && (
+                    <div>
+                      <div>
+                        <div className="bg-green-50 border border-green-200 rounded-xl p-4 mt-4">
+                          <p className="text-green-700 font-bold flex items-center gap-2">
+                            <CheckCircle2 size={24} className="text-green-600 shrink-0" />
+                            <span>تم تأكيد الحجز بنجاح</span>
+                          </p>
+                        </div>
+                      </div>
+                      <div className="mt-4 px-4 py-3 bg-[#5F8A61] text-white rounded-xl font-bold hover:opacity-90 transition-opacity flex items-center justify-center gap-2 shadow-md w-fit cursor-pointer">
+                        <MessageSquare size={18} />
+                      </div>
+                    </div>
+                  )}
+
                   {booking.status === 'rejected' && (
                     <div className="mt-4 bg-red-50 border border-red-100 text-red-600 p-4 rounded-xl flex items-start gap-3">
                       <XCircle size={24} className="text-red-500 flex-shrink-0 mt-0.5" />

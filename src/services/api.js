@@ -6,7 +6,7 @@ const forceSeedData = () => {
   const user = userStr ? JSON.parse(userStr) : null;
   const currentUserId = user?.id || "user-123";
   const currentUserName = user?.fullname || "المستخدم الحالي";
-  
+
   const driverId = user?.accountType === 'driver' ? currentUserId : "driver-456";
   const passengerId = user?.accountType === 'passenger' ? currentUserId : "passenger-789";
 
@@ -55,10 +55,10 @@ const forceSeedData = () => {
       station: "موقف طنطا",
       destination: "الإسكندرية (الموقف الجديد)",
       route: "الزراعي السريع",
-      vehicleType: "بيجو 7 راكب",
+      vehicleType: "ميكروباص",
       vehicleNumber: "س ص ع 789",
-      totalSeats: 7,
-      availableSeats: 7,
+      totalSeats: 14,
+      availableSeats: 14,
       departureTime: new Date(Date.now() + 1000 * 60 * 120).toISOString(),
       pricePerPassenger: 45,
       notes: "السيارة مجهزة للسفر الطويل",
@@ -175,7 +175,7 @@ const forceSeedData = () => {
       id: "notif-2",
       userId: passengerId,
       type: 'booking_update',
-      message: 'تم قبول طلب الحجز الخاص بك لرحلة المنيا!',
+      message: 'تم قبول طلب الحجز الخاص بك لرحلة المنيا!يم',
       read: true,
       createdAt: new Date(Date.now() - 1000 * 60 * 60 * 24).toISOString()
     }
@@ -205,13 +205,15 @@ const setStorage = (key, data) => {
 
 const generateId = () => Math.random().toString(36).substr(2, 9);
 
-// Trips API
 export const api = {
   // --- TRIPS ---
   getTrips: async (filters = {}) => {
     await delay();
     let trips = getStorage('trips');
-    
+    trips = trips.filter(
+      trip => trip.status === "active" && trip.availableSeats > 0
+    );
+
     // Apply filters
     if (filters.governorate) {
       trips = trips.filter(t => t.governorate === filters.governorate);
@@ -219,12 +221,24 @@ export const api = {
     if (filters.station) {
       trips = trips.filter(t => t.station === filters.station);
     }
+    if (filters.destinationGovernorate) {
+      trips = trips.filter(t =>
+        t.destination.includes(filters.destinationGovernorate)
+      );
+    }
+
+    if (filters.destinationStation) {
+      trips = trips.filter(t =>
+        t.destination.includes(filters.destinationStation)
+      );
+    }
     if (filters.driverId) {
       trips = trips.filter(t => t.driverId === filters.driverId);
     }
     if (filters.status) {
       trips = trips.filter(t => t.status === filters.status);
     }
+
 
     return trips;
   },
@@ -268,7 +282,7 @@ export const api = {
     if (index !== -1) {
       trips[index].availableSeats -= bookedSeats;
       if (trips[index].availableSeats <= 0) {
-         trips[index].status = 'full';
+        trips[index].status = 'full';
       }
       setStorage('trips', trips);
       return trips[index];
@@ -276,7 +290,6 @@ export const api = {
     throw new Error('Trip not found');
   },
 
-  // --- BOOKINGS ---
   getBookingsByDriver: async (driverId) => {
     await delay();
     const bookings = getStorage('bookings');
@@ -295,13 +308,12 @@ export const api = {
     const newBooking = {
       ...bookingData,
       id: generateId(),
-      status: 'pending', // pending, accepted, rejected
+      status: 'pending', 
       createdAt: new Date().toISOString()
     };
     bookings.push(newBooking);
     setStorage('bookings', bookings);
 
-    // Create Notification for Driver
     await api.createNotification({
       userId: bookingData.driverId,
       type: 'booking_request',
@@ -320,19 +332,47 @@ export const api = {
     if (index !== -1) {
       bookings[index].status = status;
       setStorage('bookings', bookings);
+      if (status === "paid") {
 
+        await api.createNotification({
+          userId: bookings[index].driverId,
+          type: "payment_completed",
+          message: `تم دفع قيمة الرحلة بواسطة ${bookings[index].passengerName}`,
+          bookingId: bookings[index].id,
+          tripId: bookings[index].tripId
+        });
+
+        return bookings[index];
+      }
+      const trips = getStorage('trips');
+      const trip = trips.find(t => t.id === bookings[index].tripId);
+      // Create Notification for Passenger
       // Create Notification for Passenger
       await api.createNotification({
         userId: bookings[index].passengerId,
-        type: 'booking_update',
-        message: status === 'accepted' ? 'تم قبول طلب الحجز الخاص بك!' : 'عذراً، تم رفض طلب الحجز.',
+
+        type: status === "accepted"
+          ? "booking_accepted"
+          : "booking_rejected",
+
+        message:
+          status === "accepted"
+            ? "تم قبول طلب الحجز الخاص بك! يمكنك الدفع الآن"
+            : "عذراً، تم رفض طلب الحجز.",
+
         bookingId: bookings[index].id,
-        tripId: bookings[index].tripId
+        tripId: bookings[index].tripId,
+
+        from: trip.station,
+        to: trip.destination,
+        price: trip.pricePerPassenger,
+        seats: bookings[index].seatsCount,
+        date: trip.departureTime,
+        paymentMethod: "vodafone"
       });
 
-      // If accepted, reduce seats
       if (status === 'accepted') {
-         await api.updateTripSeats(bookings[index].tripId, bookings[index].seats || 1);
+        await api.updateTripSeats(bookings[index].tripId, bookings[index].seats || 1);
       }
 
       return bookings[index];

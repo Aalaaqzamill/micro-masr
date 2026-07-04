@@ -5,7 +5,6 @@ import { Link } from 'react-router-dom';
 
 export function Footer() {
   const mediumGreenBg = "#3A5A41";
-
   const containerVariants = {
     hidden: { opacity: 0 },
     visible: {
@@ -25,13 +24,12 @@ export function Footer() {
       style={{ backgroundColor: mediumGreenBg }}
       dir="rtl"
     >
-      {/* Elegant Geometric Background Patterns */}
       <div className="absolute top-0 right-0 w-96 h-96 border-[60px] border-white/5 rounded-full -translate-y-1/2 translate-x-1/3 pointer-events-none"></div>
       <div className="absolute bottom-0 left-0 w-80 h-80 border-[40px] border-white/5 rounded-full translate-y-1/2 -translate-x-1/3 pointer-events-none"></div>
       <div className="absolute top-1/4 left-1/3 w-24 h-24 border-[10px] border-white/5 rounded-full pointer-events-none"></div>
 
       <div className="max-w-7xl mx-auto px-6 sm:px-8 lg:px-12 relative z-10">
-        
+
         <motion.div
           variants={containerVariants}
           initial="hidden"
@@ -39,7 +37,6 @@ export function Footer() {
           viewport={{ once: true }}
           className="flex flex-col md:flex-row justify-between items-center md:items-start gap-10 mb-10"
         >
-          {/* Logo & Description */}
           <motion.div variants={itemVariants} className="flex flex-col items-center md:items-start text-center md:text-right max-w-sm">
             <h3 className="text-2xl font-bold mb-4 tracking-tight">ميكرو مصر</h3>
             <p className="text-white/80 leading-relaxed text-sm mb-6">
@@ -78,20 +75,7 @@ export function Footer() {
               ))}
             </ul>
           </motion.div>
-
-          {/* Quick Links */}
-          <motion.div variants={itemVariants} className="flex flex-col items-center md:items-start">
-            <h4 className="text-lg font-bold mb-4 text-white/90">روابط سريعة</h4>
-            <div className="flex flex-col gap-3 text-sm text-white/70">
-              {['الرئيسية', 'الرحلات', 'من نحن', 'سياسة الخصوصية', 'الشروط والأحكام'].map((link) => (
-                <Link key={link} to="#" className="hover:text-white transition-colors duration-300">
-                  {link}
-                </Link>
-              ))}
-            </div>
-          </motion.div>
         </motion.div>
-
         {/* Bottom Bar */}
         <motion.div
           initial={{ opacity: 0 }}
@@ -103,7 +87,6 @@ export function Footer() {
             © 2026 Micro Masr. جميع الحقوق محفوظة.
           </p>
         </motion.div>
-
       </div>
     </footer>
   );

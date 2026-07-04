@@ -133,6 +133,23 @@ export function DriverBookingPage() {
     setRequests(prev => prev.filter(r => r.id !== request.id));
 
     toast.success('تم قبول الطلب بنجاح');
+    const notifications = JSON.parse(localStorage.getItem("notifications")) || [];
+
+    notifications.push({
+      id: Date.now(),
+      type: "BOOKING_ACCEPTED",
+      passengerName: request.name,
+      tripId: request.tripId,
+      from: trip.from,
+      to: trip.to,
+      price: request.price,
+      pickup: request.pickup,
+      dropoff: request.dropoff,
+      seats: request.passengers,
+      read: false
+    });
+
+    localStorage.setItem("notifications", JSON.stringify(notifications));
   };
 
   const handleReject = (id) => {

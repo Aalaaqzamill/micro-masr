@@ -11,6 +11,10 @@ export function LoginPage() {
   const { login } = useAuth();
   const [formLoading, setFormLoading] = useState(false);
   const [accountType, setAccountType] = useState('passenger');
+  const [loginErrors, setLoginErrors] = useState({
+    email: "",
+    password: ""
+  });
 
   const formik = useFormik({
     initialValues: {
@@ -27,18 +31,48 @@ export function LoginPage() {
     }),
     onSubmit: (values) => {
       setFormLoading(true);
-      setTimeout(() => {
-        const userData = {
-          email: values.email,
-          accountType: accountType,
-          fullname: 'مستخدم'
-        };
-        
-        login(userData);
 
+      setLoginErrors({
+        email: "",
+        password: ""
+      });
+
+      setTimeout(() => {
+        const users = JSON.parse(localStorage.getItem("users")) || [];
+
+        const user = users.find(u => u.email === values.email);
+
+        if (!user) {
+          setLoginErrors({
+            email: "البريد الإلكتروني غير موجود",
+            password: ""
+          });
+          setFormLoading(false);
+          return;
+        }
+
+        if (user.password !== values.password) {
+          setLoginErrors({
+            email: "",
+            password: "كلمة المرور غير صحيحة"
+          });
+          setFormLoading(false);
+          return;
+        }
+
+        if (user.accountType !== accountType) {
+          setLoginErrors({
+            email: "",
+            password: "نوع الحساب غير صحيح"
+          });
+          setFormLoading(false);
+          return;
+        }
+
+        login(user);
         setFormLoading(false);
         navigate('/');
-      }, 1500);
+      }, 500);
     },
   });
 
@@ -63,7 +97,7 @@ export function LoginPage() {
             <p className="text-gray-500">سجل دخولك عشان تبدأ مشوارك مع ميكرو مصر</p>
           </div>
           <form onSubmit={formik.handleSubmit} className="space-y-6">
-            
+
             <div className="mb-2">
               <label className="block text-gray-700 mb-3 font-bold text-sm text-center">تسجيل الدخول كـ</label>
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
@@ -86,40 +120,68 @@ export function LoginPage() {
               </div>
             </div>
             <div>
-              <label className="block text-gray-700 mb-2 font-bold text-sm mr-1">البريد الإلكتروني</label>
+              <label className="block text-gray-700 mb-2 font-bold text-sm mr-1">
+                البريد الإلكتروني
+              </label>
+
               <div className="relative">
                 <Mail className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400" size={18} />
+
                 <input
                   type="email"
-                  {...formik.getFieldProps('email')}
+                  {...formik.getFieldProps("email")}
                   placeholder="example@mail.com"
-                  className={`w-full pr-12 pl-4 py-4 border-2 rounded-2xl focus:outline-none transition-all text-right ${formik.touched.email && formik.errors.email
-                      ? 'border-red-300 focus:border-red-500 bg-red-50'
-                      : 'border-[#E5DBC8] focus:border-[#4A7554]'
-                    }`}
                   dir="ltr"
+                  className={`w-full pr-12 pl-4 py-4 border-2 rounded-2xl focus:outline-none transition-all ${(formik.touched.email && formik.errors.email) || loginErrors.email
+                    ? "border-red-300 focus:border-red-500 bg-red-50"
+                    : "border-[#E5DBC8] focus:border-[#4A7554]"
+                    }`}
                 />
               </div>
-              {formik.touched.email && formik.errors.email && (
-                <p className="text-red-500 text-xs mt-1 mr-2 font-medium">{formik.errors.email}</p>
+
+              {loginErrors.email ? (
+                <p className="text-red-500 text-xs mt-1 mr-2 font-medium">
+                  {loginErrors.email}
+                </p>
+              ) : (
+                formik.touched.email &&
+                formik.errors.email && (
+                  <p className="text-red-500 text-xs mt-1 mr-2 font-medium">
+                    {formik.errors.email}
+                  </p>
+                )
               )}
             </div>
             <div>
-              <label className="block text-gray-700 mb-2 font-bold text-sm mr-1">كلمة المرور</label>
+              <label className="block text-gray-700 mb-2 font-bold text-sm mr-1">
+                كلمة المرور
+              </label>
+
               <div className="relative">
                 <Lock className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400" size={18} />
+
                 <input
                   type="password"
-                  {...formik.getFieldProps('password')}
+                  {...formik.getFieldProps("password")}
                   placeholder="••••••••"
-                  className={`w-full pr-12 pl-4 py-4 border-2 rounded-2xl focus:outline-none transition-all ${formik.touched.password && formik.errors.password
-                      ? 'border-red-300 focus:border-red-500 bg-red-50'
-                      : 'border-[#E5DBC8] focus:border-[#4A7554]'
+                  className={`w-full pr-12 pl-4 py-4 border-2 rounded-2xl focus:outline-none transition-all ${(formik.touched.password && formik.errors.password) || loginErrors.password
+                      ? "border-red-300 focus:border-red-500 bg-red-50"
+                      : "border-[#E5DBC8] focus:border-[#4A7554]"
                     }`}
                 />
               </div>
-              {formik.touched.password && formik.errors.password && (
-                <p className="text-red-500 text-xs mt-1 mr-2 font-medium">{formik.errors.password}</p>
+
+              {loginErrors.password ? (
+                <p className="text-red-500 text-xs mt-1 mr-2 font-medium">
+                  {loginErrors.password}
+                </p>
+              ) : (
+                formik.touched.password &&
+                formik.errors.password && (
+                  <p className="text-red-500 text-xs mt-1 mr-2 font-medium">
+                    {formik.errors.password}
+                  </p>
+                )
               )}
             </div>
             <div className="flex items-center justify-between px-1">
@@ -138,6 +200,7 @@ export function LoginPage() {
                 <div className="w-6 h-6 border-3 border-white border-t-transparent rounded-full animate-spin"></div>
               ) : "دخول"}
             </button>
+
           </form>
           <div className="relative my-10">
             <div className="absolute inset-0 flex items-center"><div className="w-full border-t border-[#E5DBC8]"></div></div>

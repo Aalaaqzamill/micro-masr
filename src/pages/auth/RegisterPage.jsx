@@ -46,24 +46,32 @@ export function RegisterPage() {
     e.preventDefault();
     if (validateForm()) {
       setIsLoading(true);
-      
+
       // محاكاة طلب للشبكة
       setTimeout(() => {
         // حفظ في الـ Context
+        const users = JSON.parse(localStorage.getItem("users")) || [];
+
         const userData = {
+          id: crypto.randomUUID(),
           fullname: formData.fullname,
           email: formData.email,
           phone: formData.phone,
+          password: formData.password,
           accountType: formData.accountType
         };
-        
+
+        users.push(userData);
+
+        localStorage.setItem("users", JSON.stringify(users));
+
         login(userData);
-        
+
         toast.success('تم إنشاء الحساب بنجاح!');
         setIsLoading(false);
         navigate('/'); // التوجيه للرئيسية أو صفحة أخرى
       }, 1500);
-      
+
     } else {
       toast.error('يرجى تصحيح الأخطاء في النموذج');
     }
@@ -97,9 +105,9 @@ export function RegisterPage() {
             <h1 className="text-[#4A7554] text-3xl md:text-4xl font-bold mb-4">حساب جديد</h1>
             <p className="text-gray-600">انضم لعائلة Micro Masr وابدأ مشوارك</p>
           </div>
-          
+
           <form className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-6" onSubmit={handleSubmit}>
-            
+
             {/* Account Type Selection */}
             <div className="col-span-1 md:col-span-2 mb-2">
               <label className="block text-gray-700 mb-3 font-bold text-base text-center">نوع الحساب</label>
@@ -171,14 +179,14 @@ export function RegisterPage() {
               </div>
               {errors.phone && <p className="text-red-500 text-xs mt-1 mr-1">{errors.phone}</p>}
             </div>
-            
+
             {/* Spacer for grid balancing if needed, but we have 4 standard fields and 1 phone, so 5. Let's adjust order. 
                 Left: Fullname, Phone, Password 
                 Right: Email, ConfirmPassword
                 Actually, email and phone and name is 3. Passwords are 2. 5 fields.
                 Let's put Passwords in a row, or just let grid flow naturally.
             */}
-            
+
             <div>
               <label className="block text-gray-700 mb-1.5 font-bold text-sm">كلمة المرور</label>
               <div className="relative">
@@ -234,7 +242,7 @@ export function RegisterPage() {
               <button
                 type="submit"
                 disabled={isLoading}
-                className="w-full md:w-1/2 mx-auto block px-8 py-4 bg-[#4A7554] text-white rounded-xl hover:bg-[#5F8A61] active:scale-[0.98] transition-all shadow-md hover:shadow-lg font-bold text-lg disabled:opacity-70 flex justify-center items-center"
+                className="w-full md:w-1/2 mx-auto  px-8 py-4 bg-[#4A7554] text-white rounded-xl hover:bg-[#5F8A61] active:scale-[0.98] transition-all shadow-md hover:shadow-lg font-bold text-lg disabled:opacity-70 flex justify-center items-center"
               >
                 {isLoading ? (
                   <div className="w-6 h-6 border-3 border-white border-t-transparent rounded-full animate-spin"></div>

@@ -74,18 +74,11 @@ export function BookingSection() {
                     <span>احجز رحلة الآن</span>
                     <ArrowLeft size={20} className="group-hover:-translate-x-1 transition-transform" />
                   </button>
-                  <button 
-                    onClick={() => navigate('/register')}
-                    className="flex-1 py-4 bg-[#4A7554] text-white rounded-2xl font-extrabold text-lg hover:bg-[#3d6145] hover:-translate-y-1 hover:shadow-lg hover:shadow-[#4A7554]/20 transition-all flex items-center justify-center gap-2 group"
-                  >
-                    <span>انشر رحلة الآن</span>
-                    <ArrowLeft size={20} className="group-hover:-translate-x-1 transition-transform" />
-                  </button>
                 </div>
               </>
             )}
 
-            {/* حالة المستخدم: مسجل دخول كراكب */}
+
             {isAuthenticated && user?.accountType === 'passenger' && (
               <>
                 <h2 className="text-3xl md:text-4xl lg:text-5xl font-black text-gray-900 leading-tight mb-6">
@@ -98,18 +91,12 @@ export function BookingSection() {
                 </p>
 
                 <div className="flex flex-col sm:flex-row gap-4">
-                  <button 
-                    onClick={() => navigate('/book-passenger')}
-                    className="flex-1 py-4 bg-[#E09162] text-white rounded-2xl font-extrabold text-lg hover:bg-[#c97d50] hover:-translate-y-1 hover:shadow-lg hover:shadow-[#E09162]/20 transition-all flex items-center justify-center gap-2 group"
-                  >
-                    <span>ابحث عن رحلة الآن</span>
-                    <ArrowLeft size={20} className="group-hover:-translate-x-1 transition-transform" />
-                  </button>
+                  
                   <button 
                     onClick={() => navigate('/passenger-dashboard')}
-                    className="flex-1 py-4 border-2 border-gray-200 text-gray-700 rounded-2xl font-bold text-lg hover:bg-gray-50 hover:border-gray-300 transition-all"
+                     className="flex-1 py-4 bg-[#E09162] text-white rounded-2xl font-extrabold text-lg hover:bg-[#c97d50] hover:-translate-y-1 hover:shadow-lg hover:shadow-[#E09162]/20 transition-all flex items-center justify-center gap-2 group"
                   >
-                    لوحة التحكم الخاصة بك
+                   ابحث عن رحلة الآن
                   </button>
                 </div>
               </>
@@ -132,7 +119,7 @@ export function BookingSection() {
                     onClick={() => navigate('/driver/create-trip')}
                     className="flex-1 py-4 bg-[#4A7554] text-white rounded-2xl font-extrabold text-lg hover:bg-[#3d6145] hover:-translate-y-1 hover:shadow-lg hover:shadow-[#4A7554]/20 transition-all flex items-center justify-center gap-2 group"
                   >
-                    <span>أنشئ رحلة جديدة</span>
+                    <span>اضف رحلة جديدة</span>
                     <ArrowLeft size={20} className="group-hover:-translate-x-1 transition-transform" />
                   </button>
                   <button 
