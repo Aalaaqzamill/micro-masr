@@ -347,7 +347,7 @@ export const api = {
       const trips = getStorage('trips');
       const trip = trips.find(t => t.id === bookings[index].tripId);
       // Create Notification for Passenger
-      // Create Notification for Passenger
+
       await api.createNotification({
         userId: bookings[index].passengerId,
 
